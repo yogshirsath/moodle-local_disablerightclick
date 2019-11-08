@@ -33,11 +33,14 @@ require(['jquery', 'core/ajax', 'core/str'], function($, Ajax) {
     // Threshold to check developer tools change
     const threshold = 160;
 
-    // Store refreshPage interval
-    var refreshPage = null;
-
     // Store strings
     var strings = [];
+
+    // Store whole body
+    var wholebody = null;
+
+    // Store whole head
+    var wholehead = null;
 
     /**
      * Show toaster with message
@@ -51,7 +54,7 @@ require(['jquery', 'core/ajax', 'core/str'], function($, Ajax) {
         var toast = $("<div class='disabler-toaster toaster-container'>"+
           "<lable class='toaster-message'>" + msg + "</lable>"+
         "</div>");
-        $('body').append(toast);
+        $('html').append(toast);
         $(toast).addClass('show');
         setTimeout(function() {
             $(toast).addClass('fade');
@@ -70,14 +73,49 @@ require(['jquery', 'core/ajax', 'core/str'], function($, Ajax) {
      */
     function devtools_toggled(isOpen) {
         if (isOpen == true) {
-            show_toaster(strings['developertools'] + ' ' + strings['pagerefresh'], 5000);
             console.clear();
-            refreshPage =setInterval(function() {
-                location.reload();
-            }, 5000);
+            wholebody = $('body').detach();
+            if ($('head')) {
+                wholehead = $('head').detach();
+            }
+            if ($('#body-detached-css').length == 0) {
+                $('html').append(
+                    $('<style id="body-detached-css">'+
+                    '.disabler-toaster.toaster-container {'+
+                    'position: fixed;'+
+                    'width: 100%;'+
+                    'top: 1vw;'+
+                    'z-index: 140002;'+
+                    'left: 0;'+
+                    'opacity: 0;'+
+                    'text-align: center;'+
+                    'transition: top 0.3s linear, opacity 0.3s linear;'+
+                    'display: none;'+
+                    '}'+
+                    '.disabler-toaster.toaster-container.fade {'+
+                    'top: 6vw;'+
+                    'opacity: 1;'+
+                    '}'+
+                    '.disabler-toaster.toaster-container.show {'+
+                    'display: block;'+
+                    '}'+
+                    '.disabler-toaster.toaster-container .toaster-message {'+
+                    'padding: 1rem 2rem;'+
+                    'color: white;'+
+                    'border-radius: 2px;'+
+                    'background-color: #424242;'+
+                    '}'+
+                    '</style>')
+                );
+            }
+            show_toaster(strings['developertoolsopened'], 5000);
         }
         if (isOpen == false) {
-            clearInterval(refreshPage);
+            $('html').append(wholebody);
+            wholebody = null;
+            if (wholehead != null) {
+                $('html').append(wholehead);
+            }
         }
     }
 

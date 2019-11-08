@@ -32,4 +32,4 @@ $string['disabledevelopertoolsdesc'] = 'Developer tool shortcuts(<a target="_bla
 $string['rightclick'] = 'Right click is disabled on this site.';
 $string['cutcopypaste'] = 'Cut, Copy and Paste is disabled on this site.';
 $string['developertools'] = 'Developer tools are disabled on this site.';
-$string['pagerefresh'] = 'Page will refresh in 5 seconds. Close developer tool to prevent it.';
+$string['developertoolsopened'] = 'Please close developer tool to see page.';
