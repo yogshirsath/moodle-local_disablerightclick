@@ -127,7 +127,8 @@ require(['jquery', 'core/ajax', 'core/str'], function($, Ajax) {
         // Check key down
         $('body').on('keydown', function(event) {
             if (event.keyCode == 123 ||
-                (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1)) {
+                (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
+                (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
                 show_toaster(strings['developertools']);
                 event.preventDefault();
                 return;
@@ -179,7 +180,7 @@ require(['jquery', 'core/ajax', 'core/str'], function($, Ajax) {
         // Disable cut copy paste
         if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
             $('body').on('keydown', function(event) {
-                if (event.ctrlKey == true && [67, 86, 88].indexOf(event.keyCode) != -1) {
+                if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
                     show_toaster(strings['cutcopypaste']);
                     event.preventDefault();
                     return;
