@@ -1,4 +1,4 @@
-#Disable Cut, Copy, Paste
+Disable Cut, Copy, Paste
 
 So many universities want there student to write there answer by students instead of copy paste. Well this plugin helps to prevent it. User cannot user shortcut keys to Cut, Copy and Paste things.
 
