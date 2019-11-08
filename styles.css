@@ -1,0 +1,24 @@
+.disabler-toaster.toaster-container {
+    position: fixed;
+    width: 100%;
+    top: 1vw;
+    z-index: 140002;
+    left: 0;
+    opacity: 0;
+    text-align: center;
+    transition: top 0.3s linear, opacity 0.3s linear;
+    display: none;
+}
+.disabler-toaster.toaster-container.fade {
+    top: 6vw;
+    opacity: 1;
+}
+.disabler-toaster.toaster-container.show {
+    display: block;
+}
+.disabler-toaster.toaster-container .toaster-message {
+  padding: 1rem 2rem;
+  color: white;
+  border-radius: 2px;
+  background-color: #424242;
+}
