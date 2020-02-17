@@ -15,8 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Language strings definition
+ *
  * @package     local_disablerightclick
- * @copyright   (c) 2019 Yogesh Shirsath
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author      Yogesh Shirsath
  */
@@ -28,7 +30,7 @@ $string['disablecutcopypastedesc'] = 'Cut, Copy and Paste will be disabled throu
 $string['disabledevelopertools'] = 'Disable Developer tool shortcuts';
 $string['disabledevelopertoolsdesc'] = 'Developer tool shortcuts(<a target="_blank" href="https://developers.google.com/web/tools/chrome-devtools/shortcuts">Chrome shortcuts list</a>) will be disabled throughout the site(Except Admin and Manager). Note: Tools can be opened through browser settings menu. Cannot disable that.';
 
-// Warnings
+// Warnings.
 $string['rightclick'] = 'Right click is disabled on this site.';
 $string['cutcopypaste'] = 'Cut, Copy and Paste is disabled on this site.';
 $string['developertools'] = 'Developer tools are disabled on this site.';

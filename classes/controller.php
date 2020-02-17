@@ -15,8 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Controller code
+ *
  * @package     local_disablerightclick
- * @copyright   2019 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author      Yogesh Shirsath
  */
@@ -29,6 +31,12 @@ defined('MOODLE_INTERNAL') || die();
 use context_course;
 use context_system;
 
+/**
+ * Controller class defines main function to control plugin working
+ *
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class controller {
     /**
      * Check if current user is admin or manager of site
@@ -37,7 +45,7 @@ class controller {
     public function is_admin_or_manager() {
         global $USER, $DB;
 
-        // Check switched role
+        // Check switched role.
         if (isset($USER->access['rsw'])) {
             $switch = $USER->access['rsw'];
             $context = context_course::instance(SITEID);
@@ -46,12 +54,12 @@ class controller {
             }
         }
 
-        // Check is admin
+        // Check is admin.
         if (is_siteadmin()) {
             return true;
         }
 
-        // Check for Manager role
+        // Check for Manager role.
         $roles = get_user_roles(context_system::instance());
         if (empty($roles)) {
             return false;

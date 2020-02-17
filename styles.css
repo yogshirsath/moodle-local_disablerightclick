@@ -17,8 +17,8 @@
     display: block;
 }
 .disabler-toaster.toaster-container .toaster-message {
-  padding: 1rem 2rem;
-  color: white;
-  border-radius: 2px;
-  background-color: #424242;
+    padding: 1rem 2rem;
+    color: white;
+    border-radius: 2px;
+    background-color: #424242;
 }

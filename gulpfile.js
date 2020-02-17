@@ -1,19 +1,19 @@
-// Gulp
+// Gulp.
 var gulp = require('gulp');
 
-// Sass/CSS stuff
+// Sass/CSS stuff.
 var exec  = require('gulp-exec');
 var notify = require("gulp-notify");
 var babel = require('gulp-babel');
 
-// JS stuff
-const minify = require('gulp-minify');
+// JS stuff.
+var minify = require('gulp-minify');
 
 gulp.task('compress', function(done) {
     gulp.src(['./amd/src/*.js'])
     .pipe(minify({
         ext:{
-           min:'.js'
+            min: '.js'
         },
         noSource: true,
         ignoreFiles: []
