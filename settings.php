@@ -15,8 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Settings definition
+ *
  * @package     local_disablerightclick
- * @copyright   2019 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author      Yogesh Shirsath
  */
@@ -24,10 +26,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    // $settings will be NULL
+    // Settings will be NULL.
     $settings = new admin_settingpage('local_disablerightclick', get_string('pluginname', 'local_disablerightclick'));
     $ADMIN->add('localplugins', $settings);
-    // Disable right click
+
+    // Disable right click.
     $settings->add(
         new admin_setting_configcheckbox(
             'local_disablerightclick/disablerightclick',
@@ -37,7 +40,7 @@ if ($hassiteconfig) {
         )
     );
 
-    // Disable Cut Copy Paste
+    // Disable Cut Copy Paste.
     $settings->add(
         new admin_setting_configcheckbox(
             'local_disablerightclick/disablecutcopypaste',
@@ -47,7 +50,7 @@ if ($hassiteconfig) {
         )
     );
 
-    // Disable Developer Tools
+    // Disable Developer Tools.
     $settings->add(
         new admin_setting_configcheckbox(
             'local_disablerightclick/disabledevelopertools',

@@ -15,8 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Api services code
+ *
  * @package     local_disablerightclick
- * @copyright   2019 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author      Yogesh Shirsath
  */
@@ -32,6 +34,12 @@ use external_value;
 use stdClass;
 use local_disablerightclick\controller as controller;
 
+/**
+ * All external services functions are defined in api class.
+ *
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class api extends external_api {
     /**
      * Describes the parameters for settings

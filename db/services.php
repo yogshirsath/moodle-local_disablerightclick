@@ -15,8 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Services list
+ *
  * @package     local_disablerightclick
- * @copyright   2019 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author      Yogesh Shirsath
  */
