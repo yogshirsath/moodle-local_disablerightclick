@@ -2,35 +2,34 @@
 var gulp = require('gulp');
 
 // Sass/CSS stuff.
-var exec  = require('gulp-exec');
+var exec = require('gulp-exec');
 var notify = require("gulp-notify");
-var babel = require('gulp-babel');
 
 // JS stuff.
 var minify = require('gulp-minify');
 
-gulp.task('compress', function(done) {
-    gulp.src(['./amd/src/*.js'])
+gulp.task('compress', function() {
+    return gulp.src(['./amd/src/*.js'])
     .pipe(minify({
-        ext:{
+        ext: {
             min: '.js'
         },
         noSource: true,
         ignoreFiles: []
     }))
     .pipe(gulp.dest('./amd/build'));
-    done();
 });
 
 gulp.task('purge', gulp.series(function() {
     return gulp.src('.')
     .pipe(exec('php ./../../admin/cli/purge_caches.php'))
-    .pipe(notify('Purged All'))
+    .pipe(notify('Purged All'));
 }));
 
 gulp.task('watch', function(done) {
     gulp.watch('./amd/src/*.js', gulp.series('compress', 'purge'));
     gulp.watch(['./lang/**/*.php', './templates/**/*.mustache'], gulp.series('purge'));
+    done();
 });
 
 gulp.task('default', gulp.series('compress', 'purge', 'watch'));

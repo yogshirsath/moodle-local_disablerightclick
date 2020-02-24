@@ -23,7 +23,7 @@
  * @since      1.0
  */
 
-require(['jquery', 'core/ajax'], function($, Ajax) {
+require(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notification) {
 
     var devtools = {
         isOpen: false,
@@ -48,7 +48,7 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
      * @param {String}  msg      Toaster message
      * @param {Integer} duration Duration of toaster
      */
-    function show_toaster(msg, duration) {
+    function showToaster(msg, duration) {
         if (duration == undefined) {
             duration = 2000;
         }
@@ -73,8 +73,9 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
      *
      * @param  {Boolean} isOpen true if tools is open
      */
-    function devtools_toggled(isOpen) {
+    function devToolsToggled(isOpen) {
         if (isOpen == true) {
+            // eslint-disable-next-line no-console
             console.clear();
             wholebody = $('body').detach();
             if ($('head')) {
@@ -110,12 +111,12 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
                     '</style>')
                 );
             }
-            show_toaster(strings['developertoolsopened'], 5000);
+            showToaster(strings.developertoolsopened, 5000);
         }
         if (isOpen == false) {
             $('html').append(wholebody);
             wholebody = null;
-            if (wholehead != null) {
+            if (wholehead !== null) {
                 $('html').append(wholehead);
             }
         }
@@ -124,14 +125,14 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
     /**
      * Check whether developer tools are opened or not
      */
-    function check_devtools() {
+    function checkDevTools() {
 
         // Check key down.
         $('body').on('keydown', function(event) {
             if (event.keyCode == 123 ||
                 (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
                 (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
-                show_toaster(strings['developertools']);
+                showToaster(strings.developertools);
                 event.preventDefault();
                 return;
             }
@@ -139,23 +140,25 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
 
         // Start interval to check developer tools is open or close.
         setInterval(function() {
-            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-            const orientation = widthThreshold ? 'vertical' : 'horizontal';
+            var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+            var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+            var orientation = widthThreshold ? 'vertical' : 'horizontal';
 
             if (
                 !(heightThreshold && widthThreshold) &&
-                ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) || widthThreshold || heightThreshold)
+                ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
+                    widthThreshold ||
+                    heightThreshold)
             ) {
                 if (!devtools.isOpen || devtools.orientation !== orientation) {
-                    devtools_toggled(true);
+                    devToolsToggled(true);
                 }
 
                 devtools.isOpen = true;
                 devtools.orientation = orientation;
             } else {
                 if (devtools.isOpen) {
-                    devtools_toggled(false);
+                    devToolsToggled(false);
                 }
 
                 devtools.isOpen = false;
@@ -174,7 +177,7 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
         // Disable right click.
         if (settings.disablerightclick && settings.disablerightclick == true) {
             $('body').contextmenu(function(event) {
-                show_toaster(strings['rightclick']);
+                showToaster(strings.rightclick);
                 event.preventDefault();
                 return;
             });
@@ -184,7 +187,7 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
         if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
             $('body').on('keydown', function(event) {
                 if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
-                    show_toaster(strings['cutcopypaste']);
+                    showToaster(strings.cutcopypaste);
                     event.preventDefault();
                     return;
                 }
@@ -193,7 +196,7 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
 
         // Disable developer tools.
         if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
-            check_devtools();
+            checkDevTools();
         }
     }
 
@@ -202,11 +205,9 @@ require(['jquery', 'core/ajax'], function($, Ajax) {
             methodname: "local_disablerightclick_settings",
             args: {}
         }])[0].done(function(response) {
-            data = JSON.parse(response);
+            var data = JSON.parse(response);
             strings = data.strings;
             disabler(data.settings);
-        }).fail(function(ex){
-
-        });
+        }).fail(Notification.exception);
     });
 });
