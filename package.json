@@ -9,11 +9,18 @@
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
+        "async": "^3.2.0",
+        "eslint-plugin-promise": "^4.2.1",
         "exec": "^0.2.1",
-        "gulp-babel": "^8.0.0",
+        "grunt": "^1.0.4",
+        "grunt-eslint": "^22.0.0",
+        "grunt-load-gruntfile": "0.0.2",
+        "grunt-stylelint": "^0.14.0",
+        "gulp": "^4.0.0",
         "gulp-exec": "^4.0.0",
         "gulp-minify": "^3.1.0",
         "gulp-notify": "^3.2.0",
-        "gulp": "^4.0.0"
+        "stylelint": "^13.2.0",
+        "stylelint-csstree-validator": "^1.8.0"
     }
 }
