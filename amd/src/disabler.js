@@ -169,14 +169,52 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
             }
 
             /**
+             * Check if current page has url from allowed list
+             *
+             * @param  {String} currentUrl Current page url
+             * @param  {String} allowed    Allowed url list
+             * @return {Bool}              True if allowed on current page
+             */
+            function currentPage(currentUrl, allowed) {
+                var matched = false;
+                allowed = allowed.trim().split('\n');
+                allowed.forEach(function(url) {
+                    if (matched) {
+                        return;
+                    }
+                    if (currentUrl.indexOf(url.trim()) != -1) {
+                        matched = true;
+                    }
+                });
+                return matched;
+            }
+
+            /**
              * Disable functionality based on admin settings
              *
              * @param {Object} settings Settings object
              */
             function disabler(settings) {
 
+                // Skip if no need to disable
+                if (settings.length == 0) {
+                    return;
+                }
+
+                // Current page url
+                var url = window.location.href;
+
+                // Skip disabling if all allowed in current page
+                if (settings.allowall != '' && currentPage(url, settings.allowall)) {
+                    return;
+                }
+
                 // Disable right click.
                 if (settings.disablerightclick && settings.disablerightclick == true) {
+                    // Skip disabling if allowed in current page
+                    if (settings.allowrightclick != '' && currentPage(url, settings.allowrightclick)) {
+                        return;
+                    }
                     $('body').contextmenu(function(event) {
                         showToaster(strings.rightclick);
                         event.preventDefault();
@@ -186,6 +224,10 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
                 // Disable cut copy paste.
                 if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
+                    // Skip disabling if allowed in current page
+                    if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
+                        return;
+                    }
                     $('body').on('keydown', function(event) {
                         if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
                             showToaster(strings.cutcopypaste);
@@ -197,6 +239,10 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
                 // Disable developer tools.
                 if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
+                    // Skip disabling if allowed in current page
+                    if (settings.allowdevelopertools != '' && currentPage(url, settings.allowdevelopertools)) {
+                        return;
+                    }
                     checkDevTools();
                 }
             }

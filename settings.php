@@ -30,6 +30,16 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_disablerightclick', get_string('pluginname', 'local_disablerightclick'));
     $ADMIN->add('localplugins', $settings);
 
+    // Allow all on following pages
+    $settings->add(
+        new admin_setting_configtextarea(
+            'local_disablerightclick/allowall',
+            get_string('allowall', 'local_disablerightclick'),
+            get_string('allowalldesc', 'local_disablerightclick'),
+            ''
+        )
+    );
+
     // Disable right click.
     $settings->add(
         new admin_setting_configcheckbox(
@@ -37,6 +47,16 @@ if ($hassiteconfig) {
             get_string('pluginname', 'local_disablerightclick'),
             get_string('disablerightclickdesc', 'local_disablerightclick'),
             true
+        )
+    );
+
+    // Allow right click on following pages
+    $settings->add(
+        new admin_setting_configtextarea(
+            'local_disablerightclick/allowrightclick',
+            get_string('allowrightclick', 'local_disablerightclick'),
+            get_string('allowrightclickdesc', 'local_disablerightclick'),
+            ''
         )
     );
 
@@ -50,6 +70,16 @@ if ($hassiteconfig) {
         )
     );
 
+    // Allow cut, copy and paste on following pages
+    $settings->add(
+        new admin_setting_configtextarea(
+            'local_disablerightclick/allowcutcopypaste',
+            get_string('allowcutcopypaste', 'local_disablerightclick'),
+            get_string('allowcutcopypastedesc', 'local_disablerightclick'),
+            ''
+        )
+    );
+
     // Disable Developer Tools.
     $settings->add(
         new admin_setting_configcheckbox(
@@ -57,6 +87,16 @@ if ($hassiteconfig) {
             get_string('disabledevelopertools', 'local_disablerightclick'),
             get_string('disabledevelopertoolsdesc', 'local_disablerightclick'),
             true
+        )
+    );
+
+    // Allow developer tools on following pages
+    $settings->add(
+        new admin_setting_configtextarea(
+            'local_disablerightclick/allowdevelopertools',
+            get_string('allowdevelopertools', 'local_disablerightclick'),
+            get_string('allowdevelopertoolsdesc', 'local_disablerightclick'),
+            ''
         )
     );
 }

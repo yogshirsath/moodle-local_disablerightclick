@@ -30,6 +30,14 @@ $string['disablecutcopypastedesc'] = 'Cut, Copy and Paste will be disabled throu
 $string['disabledevelopertools'] = 'Disable Developer tool shortcuts';
 $string['disabledevelopertoolsdesc'] = 'Developer tool shortcuts(<a target="_blank" href="https://developers.google.com/web/tools/chrome-devtools/shortcuts">Chrome shortcuts list</a>) will be disabled throughout the site(Except Admin and Manager). Note: Tools can be opened through browser settings menu. Cannot disable that.';
 $string['disablerightclick:allow'] = 'Allow all for user roles';
+$string['allowall'] = 'Allow all';
+$string['allowalldesc'] = 'Allow all on above pages';
+$string['allowrightclick'] = 'Allow right click';
+$string['allowrightclickdesc'] = 'Allow right click on above pages';
+$string['allowcutcopypaste'] = 'Allow cut, copy and paste';
+$string['allowcutcopypastedesc'] = 'Allow cut, copy and paste on above pages';
+$string['allowdevelopertools'] = 'Allow developer tools';
+$string['allowdevelopertoolsdesc'] = 'Allow developer tools on above pages';
 
 // Warnings.
 $string['rightclick'] = 'Right click is disabled on this site.';
