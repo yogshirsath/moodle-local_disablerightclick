@@ -23,191 +23,194 @@
  * @since      1.0
  */
 
-require(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notification) {
+define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notification) {
+    return {
+        init: function() {
+            var devtools = {
+                isOpen: false,
+                orientation: undefined
+            };
 
-    var devtools = {
-        isOpen: false,
-        orientation: undefined
-    };
+            // Threshold to check developer tools change.
+            var threshold = 160;
 
-    // Threshold to check developer tools change.
-    var threshold = 160;
+            // Store strings.
+            var strings = [];
 
-    // Store strings.
-    var strings = [];
+            // Store whole body.
+            var wholebody = null;
 
-    // Store whole body.
-    var wholebody = null;
+            // Store whole head.
+            var wholehead = null;
 
-    // Store whole head.
-    var wholehead = null;
-
-    /**
-     * Show toaster with message
-     *
-     * @param {String}  msg      Toaster message
-     * @param {Integer} duration Duration of toaster
-     */
-    function showToaster(msg, duration) {
-        if (duration == undefined) {
-            duration = 2000;
-        }
-        var toast = $("<div class='disabler-toaster toaster-container'>" +
-        "<lable class='toaster-message'>" + msg + "</lable>" +
-        "</div>");
-        $('html').append(toast);
-        $(toast).addClass('show');
-        setTimeout(function() {
-            $(toast).addClass('fade');
-            setTimeout(function() {
-                $(toast).removeClass('fade');
+            /**
+             * Show toaster with message
+             *
+             * @param {String}  msg      Toaster message
+             * @param {Integer} duration Duration of toaster
+             */
+            function showToaster(msg, duration) {
+                if (duration == undefined) {
+                    duration = 2000;
+                }
+                var toast = $("<div class='disabler-toaster toaster-container'>" +
+                "<lable class='toaster-message'>" + msg + "</lable>" +
+                "</div>");
+                $('html').append(toast);
+                $(toast).addClass('show');
                 setTimeout(function() {
-                    $(toast).remove();
-                }, 300);
-            }, duration);
-        });
-    }
-
-    /**
-     * Start interval when developer tools is opened else clear inerval
-     *
-     * @param  {Boolean} isOpen true if tools is open
-     */
-    function devToolsToggled(isOpen) {
-        if (isOpen == true) {
-            // eslint-disable-next-line no-console
-            console.clear();
-            wholebody = $('body').detach();
-            if ($('head')) {
-                wholehead = $('head').detach();
+                    $(toast).addClass('fade');
+                    setTimeout(function() {
+                        $(toast).removeClass('fade');
+                        setTimeout(function() {
+                            $(toast).remove();
+                        }, 300);
+                    }, duration);
+                });
             }
-            if ($('#body-detached-css').length == 0) {
-                $('html').append(
-                    $('<style id="body-detached-css">' +
-                    '.disabler-toaster.toaster-container {' +
-                    'position: fixed;' +
-                    'width: 100%;' +
-                    'top: 1vw;' +
-                    'z-index: 140002;' +
-                    'left: 0;' +
-                    'opacity: 0;' +
-                    'text-align: center;' +
-                    'transition: top 0.3s linear, opacity 0.3s linear;' +
-                    'display: none;' +
-                    '}' +
-                    '.disabler-toaster.toaster-container.fade {' +
-                    'top: 6vw;' +
-                    'opacity: 1;' +
-                    '}' +
-                    '.disabler-toaster.toaster-container.show {' +
-                    'display: block;' +
-                    '}' +
-                    '.disabler-toaster.toaster-container .toaster-message {' +
-                    'padding: 1rem 2rem;' +
-                    'color: white;' +
-                    'border-radius: 2px;' +
-                    'background-color: #424242;' +
-                    '}' +
-                    '</style>')
-                );
+
+            /**
+             * Start interval when developer tools is opened else clear inerval
+             *
+             * @param  {Boolean} isOpen true if tools is open
+             */
+            function devToolsToggled(isOpen) {
+                if (isOpen == true) {
+                    // eslint-disable-next-line no-console
+                    console.clear();
+                    wholebody = $('body').detach();
+                    if ($('head')) {
+                        wholehead = $('head').detach();
+                    }
+                    if ($('#body-detached-css').length == 0) {
+                        $('html').append(
+                            $('<style id="body-detached-css">' +
+                            '.disabler-toaster.toaster-container {' +
+                            'position: fixed;' +
+                            'width: 100%;' +
+                            'top: 1vw;' +
+                            'z-index: 140002;' +
+                            'left: 0;' +
+                            'opacity: 0;' +
+                            'text-align: center;' +
+                            'transition: top 0.3s linear, opacity 0.3s linear;' +
+                            'display: none;' +
+                            '}' +
+                            '.disabler-toaster.toaster-container.fade {' +
+                            'top: 6vw;' +
+                            'opacity: 1;' +
+                            '}' +
+                            '.disabler-toaster.toaster-container.show {' +
+                            'display: block;' +
+                            '}' +
+                            '.disabler-toaster.toaster-container .toaster-message {' +
+                            'padding: 1rem 2rem;' +
+                            'color: white;' +
+                            'border-radius: 2px;' +
+                            'background-color: #424242;' +
+                            '}' +
+                            '</style>')
+                        );
+                    }
+                    showToaster(strings.developertoolsopened, 5000);
+                }
+                if (isOpen == false) {
+                    $('html').append(wholebody);
+                    wholebody = null;
+                    if (wholehead !== null) {
+                        $('html').append(wholehead);
+                    }
+                }
             }
-            showToaster(strings.developertoolsopened, 5000);
-        }
-        if (isOpen == false) {
-            $('html').append(wholebody);
-            wholebody = null;
-            if (wholehead !== null) {
-                $('html').append(wholehead);
+
+            /**
+             * Check whether developer tools are opened or not
+             */
+            function checkDevTools() {
+
+                // Check key down.
+                $('body').on('keydown', function(event) {
+                    if (event.keyCode == 123 ||
+                        (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
+                        (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
+                        showToaster(strings.developertools);
+                        event.preventDefault();
+                        return;
+                    }
+                });
+
+                // Start interval to check developer tools is open or close.
+                setInterval(function() {
+                    var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                    var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                    var orientation = widthThreshold ? 'vertical' : 'horizontal';
+
+                    if (
+                        !(heightThreshold && widthThreshold) &&
+                        ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
+                            widthThreshold ||
+                            heightThreshold)
+                    ) {
+                        if (!devtools.isOpen || devtools.orientation !== orientation) {
+                            devToolsToggled(true);
+                        }
+
+                        devtools.isOpen = true;
+                        devtools.orientation = orientation;
+                    } else {
+                        if (devtools.isOpen) {
+                            devToolsToggled(false);
+                        }
+
+                        devtools.isOpen = false;
+                        devtools.orientation = undefined;
+                    }
+                }, 1000);
             }
-        }
-    }
 
-    /**
-     * Check whether developer tools are opened or not
-     */
-    function checkDevTools() {
+            /**
+             * Disable functionality based on admin settings
+             *
+             * @param {Object} settings Settings object
+             */
+            function disabler(settings) {
 
-        // Check key down.
-        $('body').on('keydown', function(event) {
-            if (event.keyCode == 123 ||
-                (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
-                (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
-                showToaster(strings.developertools);
-                event.preventDefault();
-                return;
-            }
-        });
-
-        // Start interval to check developer tools is open or close.
-        setInterval(function() {
-            var widthThreshold = window.outerWidth - window.innerWidth > threshold;
-            var heightThreshold = window.outerHeight - window.innerHeight > threshold;
-            var orientation = widthThreshold ? 'vertical' : 'horizontal';
-
-            if (
-                !(heightThreshold && widthThreshold) &&
-                ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-                    widthThreshold ||
-                    heightThreshold)
-            ) {
-                if (!devtools.isOpen || devtools.orientation !== orientation) {
-                    devToolsToggled(true);
+                // Disable right click.
+                if (settings.disablerightclick && settings.disablerightclick == true) {
+                    $('body').contextmenu(function(event) {
+                        showToaster(strings.rightclick);
+                        event.preventDefault();
+                        return;
+                    });
                 }
 
-                devtools.isOpen = true;
-                devtools.orientation = orientation;
-            } else {
-                if (devtools.isOpen) {
-                    devToolsToggled(false);
+                // Disable cut copy paste.
+                if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
+                    $('body').on('keydown', function(event) {
+                        if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
+                            showToaster(strings.cutcopypaste);
+                            event.preventDefault();
+                            return;
+                        }
+                    });
                 }
 
-                devtools.isOpen = false;
-                devtools.orientation = undefined;
+                // Disable developer tools.
+                if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
+                    checkDevTools();
+                }
             }
-        }, 1000);
-    }
 
-    /**
-     * Disable functionality based on admin settings
-     *
-     * @param {Object} settings Settings object
-     */
-    function disabler(settings) {
-
-        // Disable right click.
-        if (settings.disablerightclick && settings.disablerightclick == true) {
-            $('body').contextmenu(function(event) {
-                showToaster(strings.rightclick);
-                event.preventDefault();
-                return;
+            $(document).ready(function() {
+                Ajax.call([{
+                    methodname: "local_disablerightclick_settings",
+                    args: {}
+                }])[0].done(function(response) {
+                    var data = JSON.parse(response);
+                    strings = data.strings;
+                    disabler(data.settings);
+                }).fail(Notification.exception);
             });
         }
-
-        // Disable cut copy paste.
-        if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
-            $('body').on('keydown', function(event) {
-                if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
-                    showToaster(strings.cutcopypaste);
-                    event.preventDefault();
-                    return;
-                }
-            });
-        }
-
-        // Disable developer tools.
-        if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
-            checkDevTools();
-        }
-    }
-
-    $(document).ready(function() {
-        Ajax.call([{
-            methodname: "local_disablerightclick_settings",
-            args: {}
-        }])[0].done(function(response) {
-            var data = JSON.parse(response);
-            strings = data.strings;
-            disabler(data.settings);
-        }).fail(Notification.exception);
-    });
+    };
 });
