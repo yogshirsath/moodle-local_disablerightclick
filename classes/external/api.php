@@ -61,7 +61,7 @@ class api extends external_api {
             'settings' => [],
             'strings' => []
         ];
-        if (!(new controller())->is_admin_or_manager()) {
+        if (!(new controller())->is_allowed()) {
             $data = [
                 'settings' => get_config('local_disablerightclick'),
                 'strings' => $stringmanager->load_component_strings('local_disablerightclick', current_language())
