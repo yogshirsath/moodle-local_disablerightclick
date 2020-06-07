@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version details
- *
- * @package     local_disablerightclick
- * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author      Yogesh Shirsath
+ * @package local_remuihomepage
+ * @author  2019 WisdmLabs
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_disablerightclick';
-$plugin->release = '1.0.0';
-$plugin->version  = 2020060700;
-$plugin->requires = 2017051500;
-$plugin->maturity = MATURITY_STABLE;
+$capabilities = array(
+    'local/disablerightclick:allow' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+        	'manager' => CAP_ALLOW
+        ),
+    ),
+);

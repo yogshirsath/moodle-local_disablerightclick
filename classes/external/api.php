@@ -47,7 +47,9 @@ class api extends external_api {
      */
     public static function settings_parameters() {
         return new external_function_parameters(
-            []
+            [
+                'contextid' => new external_value(PARAM_INT, 'Context id', VALUE_DEFAULT, 0)
+            ]
         );
     }
 
@@ -55,13 +57,13 @@ class api extends external_api {
      * Get settings
      * @return String JSON encoded settings
      */
-    public static function settings() {
+    public static function settings($contextid) {
         $stringmanager = get_string_manager();
         $data = [
             'settings' => [],
             'strings' => []
         ];
-        if (!(new controller())->is_admin_or_manager()) {
+        if (!(new controller())->is_allowed($contextid)) {
             $data = [
                 'settings' => get_config('local_disablerightclick'),
                 'strings' => $stringmanager->load_component_strings('local_disablerightclick', current_language())

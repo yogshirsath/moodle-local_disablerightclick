@@ -28,6 +28,7 @@ namespace local_disablerightclick;
 
 defined('MOODLE_INTERNAL') || die();
 
+use context;
 use context_course;
 use context_system;
 
@@ -42,31 +43,23 @@ class controller {
      * Check if current user is admin or manager of site
      * @return boolean True if user is site admin/manager
      */
-    public function is_admin_or_manager() {
-        global $USER, $DB;
+    public function is_allowed($contextid = 0) {
+        global $USER, $DB, $COURSE;
 
+        if ($contextid == 0) {
+            $context = context_course::instance($COURSE->id);
+        } else {
+            $context = context::instance_by_id($contextid);
+        }
+        if (has_capability('local/disablerightclick:allow', $context)) {
+            return true;
+        }
         // Check switched role.
         if (isset($USER->access['rsw'])) {
             $switch = $USER->access['rsw'];
             $context = context_course::instance(SITEID);
             if (isset($switch[$context->path])) {
                 return $DB->get_field('role', 'shortname', array('id' => $switch[$context->path])) == 'manager';
-            }
-        }
-
-        // Check is admin.
-        if (is_siteadmin()) {
-            return true;
-        }
-
-        // Check for Manager role.
-        $roles = get_user_roles(context_system::instance());
-        if (empty($roles)) {
-            return false;
-        }
-        foreach ($roles as $role) {
-            if ($role->shortname == 'manager') {
-                return true;
             }
         }
         return false;
