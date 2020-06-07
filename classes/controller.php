@@ -28,6 +28,7 @@ namespace local_disablerightclick;
 
 defined('MOODLE_INTERNAL') || die();
 
+use context;
 use context_course;
 use context_system;
 
@@ -42,10 +43,14 @@ class controller {
      * Check if current user is admin or manager of site
      * @return boolean True if user is site admin/manager
      */
-    public function is_allowed() {
+    public function is_allowed($contextid = 0) {
         global $USER, $DB, $COURSE;
 
-        $context = context_course::instance($COURSE->id);
+        if ($contextid == 0) {
+            $context = context_course::instance($COURSE->id);
+        } else {
+            $context = context::instance_by_id($contextid);
+        }
         if (has_capability('local/disablerightclick:allow', $context)) {
             return true;
         }

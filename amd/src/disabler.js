@@ -248,9 +248,15 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
             }
 
             $(document).ready(function() {
+                var contextid = 0;
+                if (M.cfg.contextid != undefined) {
+                    contextid = M.cfg.contextid;
+                }
                 Ajax.call([{
                     methodname: "local_disablerightclick_settings",
-                    args: {}
+                    args: {
+                        contextid: contextid
+                    }
                 }])[0].done(function(response) {
                     var data = JSON.parse(response);
                     strings = data.strings;
