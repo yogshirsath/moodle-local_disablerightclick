@@ -5,11 +5,11 @@
     "main": "disabler.js",
     "author": "2019 Yogesh Shirsath <yogshirsath@hotmail.com>",
     "license": "ISC",
-    "dependencies": {
-    },
+    "dependencies": {},
     "devDependencies": {
         "@babel/core": "^7.5.5",
         "async": "^3.2.0",
+        "babel-eslint": "^10.1.0",
         "eslint-plugin-promise": "^4.2.1",
         "exec": "^0.2.1",
         "grunt": "^1.0.4",

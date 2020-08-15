@@ -20,6 +20,18 @@ gulp.task('compress', function() {
     .pipe(gulp.dest('./amd/build'));
 });
 
+gulp.task('purgejs', gulp.series(function() {
+    return gulp.src('.')
+    .pipe(exec('php ./../../admin/cli/purge_caches.php --js=true'))
+    .pipe(notify('Purged JS'));
+}));
+
+gulp.task('purgelang', gulp.series(function() {
+    return gulp.src('.')
+    .pipe(exec('php ./../../admin/cli/purge_caches.php --lang=true'))
+    .pipe(notify('Purged Lang'));
+}));
+
 gulp.task('purge', gulp.series(function() {
     return gulp.src('.')
     .pipe(exec('php ./../../admin/cli/purge_caches.php'))
@@ -27,8 +39,9 @@ gulp.task('purge', gulp.series(function() {
 }));
 
 gulp.task('watch', function(done) {
-    gulp.watch('./amd/src/*.js', gulp.series('compress', 'purge'));
-    gulp.watch(['./lang/**/*.php', './templates/**/*.mustache'], gulp.series('purge'));
+    gulp.watch('./amd/src/*.js', gulp.series('compress', 'purgejs'));
+    gulp.watch(['./lang/**/*.php',], gulp.series('purgelang'));
+    gulp.watch(['./templates/**/*.mustache', './styles.css'], gulp.series('purge'));
     done();
 });
 

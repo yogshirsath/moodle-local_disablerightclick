@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package local_remuihomepage
- * @author  2019 WisdmLabs
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Capability definition.
+ * @package     local_disablerightclick
+ * @copyright   2020 Yogesh Shirsath <yogshirsath@hotmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author      Yogesh Shirsath
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -26,7 +28,7 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
-        	'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         ),
     ),
 );

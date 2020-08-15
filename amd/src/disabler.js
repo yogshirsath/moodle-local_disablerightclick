@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Javascript controller for the "Actions" panel at the bottom of the page.
+ * Javascript controller for disabling features like right click
  *
  * @module     local_disablerightclick/disabler
  * @package    local_disablerightclick
@@ -23,7 +23,21 @@
  * @since      1.0
  */
 
-define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notification) {
+define([
+    'jquery',
+    'core/ajax',
+    'core/notification',
+    'core/modal_factory',
+    'core/modal_events',
+    'core/templates',
+], function(
+    $,
+    Ajax,
+    Notification,
+    ModalFactory,
+    ModalEvents,
+    Templates
+) {
     return {
         init: function() {
             var devtools = {
@@ -42,6 +56,26 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
             // Store whole head.
             var wholehead = null;
+
+            // Promisses
+            var PROMISSES = {
+                SETTINGS: function(contextid) {
+                    return Ajax.call([{
+                        methodname: "local_disablerightclick_settings",
+                        args: {
+                            contextid: contextid
+                        }
+                    }])[0];
+                },
+                SUPPORT: function(action) {
+                    return Ajax.call([{
+                        methodname: "local_disablerightclick_support",
+                        args: {
+                            action: action
+                        }
+                    }])[0];
+                }
+            };
 
             /**
              * Show toaster with message
@@ -125,11 +159,12 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
             /**
              * Check whether developer tools are opened or not
+             * @param {Object} root     root element object
              */
-            function checkDevTools() {
+            function checkDevTools(root) {
 
                 // Check key down.
-                $('body').on('keydown', function(event) {
+                root.on('keydown', function(event) {
                     if (event.keyCode == 123 ||
                         (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
                         (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
@@ -192,30 +227,31 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
             /**
              * Disable functionality based on admin settings
              *
+             * @param {Object} root     root element object
              * @param {Object} settings Settings object
              */
-            function disabler(settings) {
+            function disabler(root, settings) {
 
-                // Skip if no need to disable
+                // Skip if no need to disable.
                 if (settings.length == 0) {
                     return;
                 }
 
-                // Current page url
+                // Current page url.
                 var url = window.location.href;
 
-                // Skip disabling if all allowed in current page
+                // Skip disabling if all allowed in current page.
                 if (settings.allowall != '' && currentPage(url, settings.allowall)) {
                     return;
                 }
 
                 // Disable right click.
                 if (settings.disablerightclick && settings.disablerightclick == true) {
-                    // Skip disabling if allowed in current page
+                    // Skip disabling if allowed in current page.
                     if (settings.allowrightclick != '' && currentPage(url, settings.allowrightclick)) {
                         return;
                     }
-                    $('body').contextmenu(function(event) {
+                    root.contextmenu(function(event) {
                         showToaster(strings.rightclick);
                         event.preventDefault();
                         return;
@@ -224,11 +260,11 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
                 // Disable cut copy paste.
                 if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
-                    // Skip disabling if allowed in current page
+                    // Skip disabling if allowed in current page.
                     if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
                         return;
                     }
-                    $('body').on('keydown', function(event) {
+                    root.on('keydown', function(event) {
                         if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
                             showToaster(strings.cutcopypaste);
                             event.preventDefault();
@@ -239,12 +275,37 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
                 // Disable developer tools.
                 if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
-                    // Skip disabling if allowed in current page
+                    // Skip disabling if allowed in current page.
                     if (settings.allowdevelopertools != '' && currentPage(url, settings.allowdevelopertools)) {
                         return;
                     }
-                    checkDevTools();
+                    checkDevTools(root);
                 }
+            }
+
+            /**
+             * Check whether to show support modal or not. If yes then show.
+             * @param  {Boolean} showsupport True to show support modal
+             * @param  {Integer} context     Current page context
+             */
+            function support(showsupport, context) {
+                if (showsupport != true) {
+                    return;
+                }
+                ModalFactory.create({
+                    type: ModalFactory.types.DEFAULT,
+                    title: strings['supporttitle'],
+                    body: Templates.render('local_disablerightclick/support_modal', {})
+                }, $('#create-modal'))
+                .done(function(modal) {
+                    modal.getRoot();
+                    modal.show();
+                    $('body').on('click', '[action-disablerightclick]', function() {
+                        PROMISSES.SUPPORT($(this).data('value'));
+                        modal.destroy();
+                    });
+                })
+                .fail(Notification.exception);
             }
 
             $(document).ready(function() {
@@ -252,15 +313,20 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                 if (M.cfg.contextid != undefined) {
                     contextid = M.cfg.contextid;
                 }
-                Ajax.call([{
-                    methodname: "local_disablerightclick_settings",
-                    args: {
-                        contextid: contextid
-                    }
-                }])[0].done(function(response) {
+                PROMISSES.SETTINGS(contextid).done(function(response) {
                     var data = JSON.parse(response);
                     strings = data.strings;
-                    disabler(data.settings);
+                    disabler($('body'), data.settings);
+                    support(data.showsupport, data.context);
+                    setInterval(function() {
+                        if ($('iframe').length == 0) {
+                            return;
+                        }
+                        $('iframe:not(.applied-disablement)').each(function(index, iframe) {
+                            $(this).addClass('applied-disablement');
+                            disabler($(iframe.contentWindow.document.body), data.settings);
+                        });
+                    }, 1000);
                 }).fail(Notification.exception);
             });
         }

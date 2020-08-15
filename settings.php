@@ -30,7 +30,7 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_disablerightclick', get_string('pluginname', 'local_disablerightclick'));
     $ADMIN->add('localplugins', $settings);
 
-    // Allow all on following pages
+    // Allow all on following pages.
     $settings->add(
         new admin_setting_configtextarea(
             'local_disablerightclick/allowall',
@@ -50,7 +50,7 @@ if ($hassiteconfig) {
         )
     );
 
-    // Allow right click on following pages
+    // Allow right click on following pages.
     $settings->add(
         new admin_setting_configtextarea(
             'local_disablerightclick/allowrightclick',
@@ -70,7 +70,7 @@ if ($hassiteconfig) {
         )
     );
 
-    // Allow cut, copy and paste on following pages
+    // Allow cut, copy and paste on following pages.
     $settings->add(
         new admin_setting_configtextarea(
             'local_disablerightclick/allowcutcopypaste',
@@ -90,7 +90,7 @@ if ($hassiteconfig) {
         )
     );
 
-    // Allow developer tools on following pages
+    // Allow developer tools on following pages.
     $settings->add(
         new admin_setting_configtextarea(
             'local_disablerightclick/allowdevelopertools',

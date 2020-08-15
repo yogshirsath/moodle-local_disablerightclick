@@ -22,3 +22,17 @@
     border-radius: 2px;
     background-color: #424242;
 }
+
+.disablerightclick-support .message {
+    margin-bottom: 2rem;
+}
+.disablerightclick-support .icon {
+    width: 50px;
+    height: 50px;
+}
+.disablerightclick-support .buttons-list {
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-left: auto;
+}

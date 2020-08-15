@@ -1,9 +1,11 @@
 ## V1.0.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8):
 
-- Protect your content from selection and copy. this plugin makes content protection your extremely simple without yelling at your readers.
+- Protect your content from selection and copy.
+  this plugin makes content protection your extremely simple without yelling at your readers.
 - Disable right click on images to prevent downloading. No one can save images from your site.
 - Disable right-click on the web page to copy content from any page.
-- Disable keyboard shortcuts: Select All (Ctrl+A), Cut (Ctrl+X), Copy (Ctrl+C), Save (Ctrl+S), Paste (ctrl+V), Inspect (Ctrl+Shift+I), View-source (Ctrl+U).(More shortcuts will be added soon)
+- Disable keyboard shortcuts: Select All (Ctrl+A), Cut (Ctrl+X), Copy (Ctrl+C), Save (Ctrl+S),
+  Paste (ctrl+V), Inspect (Ctrl+Shift+I), View-source (Ctrl+U).(More shortcuts will be added soon)
 - Work with any themes.
 - Work well on mobile devices.
 - Compatible with Chrome and Firefox. (Soon will be compatible with Safari)
@@ -18,3 +20,9 @@
 - Added page url list setting to allow functionality on specific pages
 - Using checking capability to check admin and manager role.
 - Using capability to allow or disallow.
+
+## V1.2.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
+- Added support to ifram. Now you can disable right click and more on iframe.
+- Fixed js error when course or category is deleted.
+- Fixed switch user role issue. Disabling will work properly when user role is switched.
+- Added modal to gain support.

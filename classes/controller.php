@@ -41,27 +41,54 @@ use context_system;
 class controller {
     /**
      * Check if current user is admin or manager of site
-     * @return boolean True if user is site admin/manager
+     * @param  integer $contextid Context id of course
+     * @return boolean            True if user is site admin/manager
      */
     public function is_allowed($contextid = 0) {
         global $USER, $DB, $COURSE;
 
-        if ($contextid == 0) {
+        if ($contextid == 0 || !$DB->record_exists('context', array('id' => $contextid))) {
             $context = context_course::instance($COURSE->id);
         } else {
             $context = context::instance_by_id($contextid);
         }
+        // Check switched role.
+        if (!empty($USER->access['rsw'])) {
+            $context = context_course::instance(SITEID);
+            if (has_capability_in_accessdata('local/disablerightclick:allow', $context, $USER->access)) {
+                return true;
+            }
+            return false;
+        }
         if (has_capability('local/disablerightclick:allow', $context)) {
             return true;
         }
-        // Check switched role.
-        if (isset($USER->access['rsw'])) {
-            $switch = $USER->access['rsw'];
-            $context = context_course::instance(SITEID);
-            if (isset($switch[$context->path])) {
-                return $DB->get_field('role', 'shortname', array('id' => $switch[$context->path])) == 'manager';
-            }
-        }
         return false;
+    }
+
+    /**
+     * Check whther to show support message
+     *
+     * @return bool True if to show support message
+     */
+    public function show_support() {
+        $show = get_config('local_disablerightclick', 'showsupport');
+        if ($show == 'never' || !is_siteadmin()) {
+            return false;
+        }
+        return $show == false || $show < time();
+    }
+
+    /**
+     * Apply click action of admin
+     * @param  mixed $action Action performed by admin
+     * @return Bool
+     */
+    public function support_action($action) {
+        if ($action == 'later') {
+            $action = time() + 604800;
+        }
+        set_config('showsupport', $action, 'local_disablerightclick');
+        return true;
     }
 }
