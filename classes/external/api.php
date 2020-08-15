@@ -28,10 +28,11 @@ namespace local_disablerightclick\external;
 
 defined('MOODLE_INTERNAL') || die();
 
-use external_api;
-use external_function_parameters;
-use external_value;
 use stdClass;
+use external_api;
+use external_value;
+use context_system;
+use external_function_parameters;
 use local_disablerightclick\controller as controller;
 
 /**
@@ -60,15 +61,14 @@ class api extends external_api {
      */
     public static function settings($contextid) {
         $stringmanager = get_string_manager();
+        $controller = new controller();
         $data = [
+            'showsupport' => $controller->show_support(),
+            'strings' => $stringmanager->load_component_strings('local_disablerightclick', current_language()),
             'settings' => [],
-            'strings' => []
         ];
-        if (!(new controller())->is_allowed($contextid)) {
-            $data = [
-                'settings' => get_config('local_disablerightclick'),
-                'strings' => $stringmanager->load_component_strings('local_disablerightclick', current_language())
-            ];
+        if (!$controller->is_allowed($contextid)) {
+            $data['settings'] = get_config('local_disablerightclick');
         }
         return json_encode($data);
     }
@@ -79,5 +79,36 @@ class api extends external_api {
      */
     public static function settings_returns() {
         return new external_value(PARAM_RAW, 'Settings');
+    }
+
+
+    /**
+     * Describes the parameters for settings
+     * @return external_function_parameters
+     */
+    public static function support_parameters() {
+        return new external_function_parameters(
+            [
+                'action' => new external_value(PARAM_ALPHA, 'Action to perform with support modal')
+            ]
+        );
+    }
+
+    /**
+     * Get settings
+     * @param  integer $contextid Context id of course
+     * @return String             JSON encoded settings
+     */
+    public static function support($action) {
+        $controller = new controller();
+        return $controller->support_action($action);
+    }
+
+    /**
+     * Returns description of method parameters for support action
+     * @return external_single_structure
+     */
+    public static function support_returns() {
+        return new external_value(PARAM_RAW, 'Support action status');
     }
 }

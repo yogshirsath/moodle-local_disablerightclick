@@ -65,4 +65,30 @@ class controller {
         }
         return false;
     }
+
+    /**
+     * Check whther to show support message
+     *
+     * @return bool True if to show support message
+     */
+    public function show_support() {
+        $show = get_config('local_disablerightclick', 'showsupport');
+        if ($show == 'never' || !is_siteadmin()) {
+            return false;
+        }
+        return $show == false || $show < time();
+    }
+
+    /**
+     * Apply click action of admin
+     * @param  mixed $action Action performed by admin
+     * @return Bool
+     */
+    public function support_action($action) {
+        if ($action == 'later') {
+            $action = time() + 604800;
+        }
+        set_config('showsupport', $action, 'local_disablerightclick');
+        return true;
+    }
 }

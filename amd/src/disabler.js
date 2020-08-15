@@ -23,7 +23,21 @@
  * @since      1.0
  */
 
-define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notification) {
+define([
+    'jquery',
+    'core/ajax',
+    'core/notification',
+    'core/modal_factory',
+    'core/modal_events',
+    'core/templates',
+], function(
+    $,
+    Ajax,
+    Notification,
+    ModalFactory,
+    ModalEvents,
+    Templates
+) {
     return {
         init: function() {
             var devtools = {
@@ -50,6 +64,14 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                         methodname: "local_disablerightclick_settings",
                         args: {
                             contextid: contextid
+                        }
+                    }])[0];
+                },
+                SUPPORT: function(action) {
+                    return Ajax.call([{
+                        methodname: "local_disablerightclick_support",
+                        args: {
+                            action: action
                         }
                     }])[0];
                 }
@@ -261,6 +283,31 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                 }
             }
 
+            /**
+             * Check whether to show support modal or not. If yes then show.
+             * @param  {Boolean} showsupport True to show support modal
+             * @param  {Integer} context     Current page context
+             */
+            function support(showsupport, context) {
+                if (showsupport != true) {
+                    return;
+                }
+                ModalFactory.create({
+                    type: ModalFactory.types.DEFAULT,
+                    title: strings['supporttitle'],
+                    body: Templates.render('local_disablerightclick/support_modal', {})
+                }, $('#create-modal'))
+                .done(function(modal) {
+                    modal.getRoot();
+                    modal.show();
+                    $('body').on('click', '[action-disablerightclick]', function() {
+                        PROMISSES.SUPPORT($(this).data('value'));
+                        modal.destroy();
+                    });
+                })
+                .fail(Notification.exception);
+            }
+
             $(document).ready(function() {
                 var contextid = 0;
                 if (M.cfg.contextid != undefined) {
@@ -270,7 +317,7 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                     var data = JSON.parse(response);
                     strings = data.strings;
                     disabler($('body'), data.settings);
-
+                    support(data.showsupport, data.context);
                     setInterval(function() {
                         if ($('iframe').length == 0) {
                             return;
