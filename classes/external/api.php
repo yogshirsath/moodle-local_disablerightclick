@@ -55,7 +55,8 @@ class api extends external_api {
 
     /**
      * Get settings
-     * @return String JSON encoded settings
+     * @param  integer $contextid Context id of course
+     * @return String             JSON encoded settings
      */
     public static function settings($contextid) {
         $stringmanager = get_string_manager();

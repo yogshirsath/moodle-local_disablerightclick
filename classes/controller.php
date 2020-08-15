@@ -41,7 +41,8 @@ use context_system;
 class controller {
     /**
      * Check if current user is admin or manager of site
-     * @return boolean True if user is site admin/manager
+     * @param  integer $contextid Context id of course
+     * @return boolean            True if user is site admin/manager
      */
     public function is_allowed($contextid = 0) {
         global $USER, $DB, $COURSE;

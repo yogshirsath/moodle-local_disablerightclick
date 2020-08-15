@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Javascript controller for the "Actions" panel at the bottom of the page.
+ * Javascript controller for disabling features like right click
  *
  * @module     local_disablerightclick/disabler
  * @package    local_disablerightclick
@@ -196,22 +196,22 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
              */
             function disabler(settings) {
 
-                // Skip if no need to disable
+                // Skip if no need to disable.
                 if (settings.length == 0) {
                     return;
                 }
 
-                // Current page url
+                // Current page url.
                 var url = window.location.href;
 
-                // Skip disabling if all allowed in current page
+                // Skip disabling if all allowed in current page.
                 if (settings.allowall != '' && currentPage(url, settings.allowall)) {
                     return;
                 }
 
                 // Disable right click.
                 if (settings.disablerightclick && settings.disablerightclick == true) {
-                    // Skip disabling if allowed in current page
+                    // Skip disabling if allowed in current page.
                     if (settings.allowrightclick != '' && currentPage(url, settings.allowrightclick)) {
                         return;
                     }
@@ -224,7 +224,7 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
                 // Disable cut copy paste.
                 if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
-                    // Skip disabling if allowed in current page
+                    // Skip disabling if allowed in current page.
                     if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
                         return;
                     }
@@ -239,7 +239,7 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
 
                 // Disable developer tools.
                 if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
-                    // Skip disabling if allowed in current page
+                    // Skip disabling if allowed in current page.
                     if (settings.allowdevelopertools != '' && currentPage(url, settings.allowdevelopertools)) {
                         return;
                     }
