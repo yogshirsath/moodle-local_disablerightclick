@@ -52,16 +52,16 @@ class controller {
         } else {
             $context = context::instance_by_id($contextid);
         }
+        // Check switched role.
+        if (!empty($USER->access['rsw'])) {
+            $context = context_course::instance(SITEID);
+            if (has_capability_in_accessdata('local/disablerightclick:allow', $context, $USER->access)) {
+                return true;
+            }
+            return false;
+        }
         if (has_capability('local/disablerightclick:allow', $context)) {
             return true;
-        }
-        // Check switched role.
-        if (isset($USER->access['rsw'])) {
-            $switch = $USER->access['rsw'];
-            $context = context_course::instance(SITEID);
-            if (isset($switch[$context->path])) {
-                return $DB->get_field('role', 'shortname', array('id' => $switch[$context->path])) == 'manager';
-            }
         }
         return false;
     }
