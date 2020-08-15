@@ -36,3 +36,6 @@
     margin-right: 1rem;
     margin-left: auto;
 }
+.disablerightclick-support .center {
+    text-align: center;
+}

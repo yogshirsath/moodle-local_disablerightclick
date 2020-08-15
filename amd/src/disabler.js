@@ -286,9 +286,8 @@ define([
             /**
              * Check whether to show support modal or not. If yes then show.
              * @param  {Boolean} showsupport True to show support modal
-             * @param  {Integer} context     Current page context
              */
-            function support(showsupport, context) {
+            function support(showsupport) {
                 if (showsupport != true) {
                     return;
                 }
@@ -300,7 +299,7 @@ define([
                 .done(function(modal) {
                     modal.getRoot();
                     modal.show();
-                    $('body').on('click', '[action-disablerightclick]', function() {
+                    $('body').on('click', '[data-action-disablerightclick]', function() {
                         PROMISSES.SUPPORT($(this).data('value'));
                         modal.destroy();
                     });

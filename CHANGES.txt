@@ -22,7 +22,7 @@
 - Using capability to allow or disallow.
 
 ## V1.2.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
-- Added support to ifram. Now you can disable right click and more on iframe.
+- Added support to iframe. Now you can disable right click and more on iframe.
 - Fixed js error when course or category is deleted.
 - Fixed switch user role issue. Disabling will work properly when user role is switched.
 - Added modal to gain support.

@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     // We need to include the core Moodle grunt file too, otherwise we can't run tasks like "amd".
     require("grunt-load-gruntfile")(grunt);
 
-    grunt.initConfig({
+    grunt.config.merge({
         eslint: {
             // Even though warnings dont stop the build we don't display warnings by default because
             // at this moment we've got too many core warnings.

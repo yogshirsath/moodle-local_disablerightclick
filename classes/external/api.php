@@ -96,8 +96,8 @@ class api extends external_api {
 
     /**
      * Get settings
-     * @param  integer $contextid Context id of course
-     * @return String             JSON encoded settings
+     * @param  integer $action Action to apply on support modal
+     * @return String          JSON encoded settings
      */
     public static function support($action) {
         $controller = new controller();
