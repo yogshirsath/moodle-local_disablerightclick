@@ -47,7 +47,7 @@ class controller {
     public function is_allowed($contextid = 0) {
         global $USER, $DB, $COURSE;
 
-        if ($contextid == 0) {
+        if ($contextid == 0 || !$DB->record_exists('context', array('id' => $contextid))) {
             $context = context_course::instance($COURSE->id);
         } else {
             $context = context::instance_by_id($contextid);
