@@ -102,7 +102,7 @@ define([
                 if (duration == undefined) {
                     duration = 2000;
                 }
-                var toast = $("<div class='disabler-toaster toaster-container'>" +
+                var toast = $("<div class='disabler-toaster toaster-container' style='pointer-events:none;'>" +
                 "<lable class='toaster-message'>" + msg + "</lable>" +
                 "</div>");
                 $('html').append(toast);
@@ -180,9 +180,7 @@ define([
                 var map = {};
                 // Check key down.
                 root.on('keydown', function(event) {
-                    console.log('event.keyCode', event.keyCode);
                     map[macKeys[event.keyCode]] = event.type == 'keydown';
-                    console.log('map', map);
                     if (event.keyCode == 123 ||
                         (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
                         (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1) ||
@@ -203,36 +201,35 @@ define([
                   if (event.type == 'keyup') {
                     map[macKeys[event.keyCode]] = false;
                   }
-                  console.log('map', map);
                 });
 
                 // Start interval to check developer tools is open or close.
-                // setInterval(function() {
-                //     var widthThreshold = window.outerWidth - window.innerWidth > threshold;
-                //     var heightThreshold = window.outerHeight - window.innerHeight > threshold;
-                //     var orientation = widthThreshold ? 'vertical' : 'horizontal';
+                setInterval(function() {
+                    var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                    var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                    var orientation = widthThreshold ? 'vertical' : 'horizontal';
 
-                //     if (
-                //         !(heightThreshold && widthThreshold) &&
-                //         ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-                //             widthThreshold ||
-                //             heightThreshold)
-                //     ) {
-                //         if (!devtools.isOpen || devtools.orientation !== orientation) {
-                //             devToolsToggled(true);
-                //         }
+                    if (
+                        !(heightThreshold && widthThreshold) &&
+                        ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
+                            widthThreshold ||
+                            heightThreshold)
+                    ) {
+                        if (!devtools.isOpen || devtools.orientation !== orientation) {
+                            devToolsToggled(true);
+                        }
 
-                //         devtools.isOpen = true;
-                //         devtools.orientation = orientation;
-                //     } else {
-                //         if (devtools.isOpen) {
-                //             devToolsToggled(false);
-                //         }
+                        devtools.isOpen = true;
+                        devtools.orientation = orientation;
+                    } else {
+                        if (devtools.isOpen) {
+                            devToolsToggled(false);
+                        }
 
-                //         devtools.isOpen = false;
-                //         devtools.orientation = undefined;
-                //     }
-                // }, 1000);
+                        devtools.isOpen = false;
+                        devtools.orientation = undefined;
+                    }
+                }, 1000);
             }
 
             /**
@@ -298,9 +295,7 @@ define([
                     }
                     var map = {};
                     root.on('keydown', function(event) {
-                        console.log('event.keyCode', event.keyCode);
                         map[macKeys[event.keyCode]] = event.type == 'keydown';
-                        console.log('map', map);
                         if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1 ||
                             ((map['commandLeft'] || map['commandRight']) && map['C']) ||
                             ((map['commandLeft'] || map['commandRight']) && map['X']) ||
@@ -315,7 +310,6 @@ define([
                       if (event.type == 'keyup') {
                         map[macKeys[event.keyCode]] = false;
                       }
-                      console.log('map', map);
                     });
                 }
 
