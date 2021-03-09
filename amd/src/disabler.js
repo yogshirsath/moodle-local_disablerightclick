@@ -76,6 +76,21 @@ define([
                     }])[0];
                 }
             };
+        
+            var macKeys = {
+                91: 'commandLeft',
+                93: 'commandRight',
+                18: 'option',
+                73: 'I',
+                67: 'C',
+                85: 'U',
+                74: 'J',
+                75: 'K',
+                83: 'S',
+                69: 'E',
+                88: 'X',
+                86: 'V',
+            }
 
             /**
              * Show toaster with message
@@ -162,45 +177,62 @@ define([
              * @param {Object} root     root element object
              */
             function checkDevTools(root) {
-
+                var map = {};
                 // Check key down.
                 root.on('keydown', function(event) {
+                    console.log('event.keyCode', event.keyCode);
+                    map[macKeys[event.keyCode]] = event.type == 'keydown';
+                    console.log('map', map);
                     if (event.keyCode == 123 ||
                         (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
-                        (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
+                        (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['I']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['C']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['U']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['J']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['K']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['S']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['E'])) {
                         showToaster(strings.developertools);
                         event.preventDefault();
                         return;
                     }
                 });
 
+                root.on('keyup', function(event) {
+                  if (event.type == 'keyup') {
+                    map[macKeys[event.keyCode]] = false;
+                  }
+                  console.log('map', map);
+                });
+
                 // Start interval to check developer tools is open or close.
-                setInterval(function() {
-                    var widthThreshold = window.outerWidth - window.innerWidth > threshold;
-                    var heightThreshold = window.outerHeight - window.innerHeight > threshold;
-                    var orientation = widthThreshold ? 'vertical' : 'horizontal';
+                // setInterval(function() {
+                //     var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                //     var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                //     var orientation = widthThreshold ? 'vertical' : 'horizontal';
 
-                    if (
-                        !(heightThreshold && widthThreshold) &&
-                        ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-                            widthThreshold ||
-                            heightThreshold)
-                    ) {
-                        if (!devtools.isOpen || devtools.orientation !== orientation) {
-                            devToolsToggled(true);
-                        }
+                //     if (
+                //         !(heightThreshold && widthThreshold) &&
+                //         ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
+                //             widthThreshold ||
+                //             heightThreshold)
+                //     ) {
+                //         if (!devtools.isOpen || devtools.orientation !== orientation) {
+                //             devToolsToggled(true);
+                //         }
 
-                        devtools.isOpen = true;
-                        devtools.orientation = orientation;
-                    } else {
-                        if (devtools.isOpen) {
-                            devToolsToggled(false);
-                        }
+                //         devtools.isOpen = true;
+                //         devtools.orientation = orientation;
+                //     } else {
+                //         if (devtools.isOpen) {
+                //             devToolsToggled(false);
+                //         }
 
-                        devtools.isOpen = false;
-                        devtools.orientation = undefined;
-                    }
-                }, 1000);
+                //         devtools.isOpen = false;
+                //         devtools.orientation = undefined;
+                //     }
+                // }, 1000);
             }
 
             /**
@@ -264,12 +296,26 @@ define([
                     if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
                         return;
                     }
+                    var map = {};
                     root.on('keydown', function(event) {
-                        if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
+                        console.log('event.keyCode', event.keyCode);
+                        map[macKeys[event.keyCode]] = event.type == 'keydown';
+                        console.log('map', map);
+                        if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1 ||
+                            ((map['commandLeft'] || map['commandRight']) && map['C']) ||
+                            ((map['commandLeft'] || map['commandRight']) && map['X']) ||
+                            ((map['commandLeft'] || map['commandRight']) && map['V'])) {
                             showToaster(strings.cutcopypaste);
                             event.preventDefault();
                             return;
                         }
+                    });
+                    
+                    root.on('keyup', function(event) {
+                      if (event.type == 'keyup') {
+                        map[macKeys[event.keyCode]] = false;
+                      }
+                      console.log('map', map);
                     });
                 }
 
