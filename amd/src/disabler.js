@@ -76,6 +76,21 @@ define([
                     }])[0];
                 }
             };
+        
+            var macKeys = {
+                91: 'commandLeft',
+                93: 'commandRight',
+                18: 'option',
+                73: 'I',
+                67: 'C',
+                85: 'U',
+                74: 'J',
+                75: 'K',
+                83: 'S',
+                69: 'E',
+                88: 'X',
+                86: 'V',
+            }
 
             /**
              * Show toaster with message
@@ -87,7 +102,7 @@ define([
                 if (duration == undefined) {
                     duration = 2000;
                 }
-                var toast = $("<div class='disabler-toaster toaster-container'>" +
+                var toast = $("<div class='disabler-toaster toaster-container' style='pointer-events:none;'>" +
                 "<lable class='toaster-message'>" + msg + "</lable>" +
                 "</div>");
                 $('html').append(toast);
@@ -162,16 +177,30 @@ define([
              * @param {Object} root     root element object
              */
             function checkDevTools(root) {
-
+                var map = {};
                 // Check key down.
                 root.on('keydown', function(event) {
+                    map[macKeys[event.keyCode]] = event.type == 'keydown';
                     if (event.keyCode == 123 ||
                         (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
-                        (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
+                        (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['I']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['C']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['U']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['J']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['K']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['S']) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['E'])) {
                         showToaster(strings.developertools);
                         event.preventDefault();
                         return;
                     }
+                });
+
+                root.on('keyup', function(event) {
+                  if (event.type == 'keyup') {
+                    map[macKeys[event.keyCode]] = false;
+                  }
                 });
 
                 // Start interval to check developer tools is open or close.
@@ -264,12 +293,23 @@ define([
                     if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
                         return;
                     }
+                    var map = {};
                     root.on('keydown', function(event) {
-                        if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
+                        map[macKeys[event.keyCode]] = event.type == 'keydown';
+                        if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1 ||
+                            ((map['commandLeft'] || map['commandRight']) && map['C']) ||
+                            ((map['commandLeft'] || map['commandRight']) && map['X']) ||
+                            ((map['commandLeft'] || map['commandRight']) && map['V'])) {
                             showToaster(strings.cutcopypaste);
                             event.preventDefault();
                             return;
                         }
+                    });
+                    
+                    root.on('keyup', function(event) {
+                      if (event.type == 'keyup') {
+                        map[macKeys[event.keyCode]] = false;
+                      }
                     });
                 }
 
