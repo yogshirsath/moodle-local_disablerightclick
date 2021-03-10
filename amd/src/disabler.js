@@ -180,26 +180,26 @@ define([
                 var map = {};
                 // Check key down.
                 root.on('keydown', function(event) {
-                    map[macKeys[event.keyCode]] = event.type == 'keydown';
+                    if (macKeys[event.keyCode]) {
+                      map[macKeys[event.keyCode]] = event.type == 'keydown';
+                    }
                     if (event.keyCode == 123 ||
                         (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
                         (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['I']) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['C']) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['U']) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['J']) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['K']) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['S']) ||
-                        ((map['commandLeft'] || map['commandRight']) && map['option'] && map['E'])) {
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] &&
+                        (map['I'] || map['C'] || map['U'] || map['J'] || map['K'] || map['S'] || map['E']))) {
                         showToaster(strings.developertools);
                         event.preventDefault();
+                        map[macKeys[event.keyCode]] = false;
                         return;
                     }
                 });
 
                 root.on('keyup', function(event) {
                   if (event.type == 'keyup') {
-                    map[macKeys[event.keyCode]] = false;
+                    if (macKeys[event.keyCode]) {
+                      map = {};
+                    }
                   }
                 });
 
@@ -295,20 +295,23 @@ define([
                     }
                     var map = {};
                     root.on('keydown', function(event) {
-                        map[macKeys[event.keyCode]] = event.type == 'keydown';
+                        if (macKeys[event.keyCode]) {
+                          map[macKeys[event.keyCode]] = event.type == 'keydown';
+                        }
                         if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1 ||
-                            ((map['commandLeft'] || map['commandRight']) && map['C']) ||
-                            ((map['commandLeft'] || map['commandRight']) && map['X']) ||
-                            ((map['commandLeft'] || map['commandRight']) && map['V'])) {
+                            ((map['commandLeft'] || map['commandRight']) && (map['C'] || map['X'] || map['V']))) {
                             showToaster(strings.cutcopypaste);
                             event.preventDefault();
+                            map[macKeys[event.keyCode]] = false;
                             return;
                         }
                     });
                     
                     root.on('keyup', function(event) {
                       if (event.type == 'keyup') {
-                        map[macKeys[event.keyCode]] = false;
+                        if (macKeys[event.keyCode]) {
+                          map = {};
+                        }
                       }
                     });
                 }
