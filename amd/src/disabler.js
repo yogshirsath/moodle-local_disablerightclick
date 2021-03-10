@@ -24,353 +24,353 @@
  */
 
 define([
-  'jquery',
-  'core/ajax',
-  'core/notification',
-  'core/modal_factory',
-  'core/modal_events',
-  'core/templates',
-], function(
-  $,
-  Ajax,
-  Notification,
-  ModalFactory,
-  ModalEvents,
-  Templates
-) {
-  return {
-      init: function() {
-          var devtools = {
-              isOpen: false,
-              orientation: undefined
-          };
+    'jquery',
+    'core/ajax',
+    'core/notification',
+    'core/modal_factory',
+    'core/modal_events',
+    'core/templates',
+  ], function(
+    $,
+    Ajax,
+    Notification,
+    ModalFactory,
+    ModalEvents,
+    Templates
+  ) {
+    return {
+        init: function() {
+            var devtools = {
+                isOpen: false,
+                orientation: undefined
+            };
 
-          // Threshold to check developer tools change.
-          var threshold = 160;
+            // Threshold to check developer tools change.
+            var threshold = 160;
 
-          // Store strings.
-          var strings = [];
+            // Store strings.
+            var strings = [];
 
-          // Store whole body.
-          var wholebody = null;
+            // Store whole body.
+            var wholebody = null;
 
-          // Store whole head.
-          var wholehead = null;
+            // Store whole head.
+            var wholehead = null;
 
-          // Promisses
-          var PROMISSES = {
-              SETTINGS: function(contextid) {
-                  return Ajax.call([{
-                      methodname: "local_disablerightclick_settings",
-                      args: {
-                          contextid: contextid
-                      }
-                  }])[0];
-              },
-              SUPPORT: function(action) {
-                  return Ajax.call([{
-                      methodname: "local_disablerightclick_support",
-                      args: {
-                          action: action
-                      }
-                  }])[0];
-              }
-          };
-      
-          var macKeys = {
-              91: 'commandLeft',
-              93: 'commandRight',
-              18: 'option',
-              73: 'I',
-              67: 'C',
-              85: 'U',
-              74: 'J',
-              75: 'K',
-              83: 'S',
-              69: 'E',
-              88: 'X',
-              86: 'V',
-          }
-
-          /**
-           * Show toaster with message
-           *
-           * @param {String}  msg      Toaster message
-           * @param {Integer} duration Duration of toaster
-           */
-          function showToaster(msg, duration) {
-              if (duration == undefined) {
-                  duration = 2000;
-              }
-              var toast = $("<div class='disabler-toaster toaster-container' style='pointer-events:none;'>" +
-              "<lable class='toaster-message'>" + msg + "</lable>" +
-              "</div>");
-              $('html').append(toast);
-              $(toast).addClass('show');
-              setTimeout(function() {
-                  $(toast).addClass('fade');
-                  setTimeout(function() {
-                      $(toast).removeClass('fade');
-                      setTimeout(function() {
-                          $(toast).remove();
-                      }, 300);
-                  }, duration);
-              });
-          }
-
-          /**
-           * Start interval when developer tools is opened else clear inerval
-           *
-           * @param  {Boolean} isOpen true if tools is open
-           */
-          function devToolsToggled(isOpen) {
-              if (isOpen == true) {
-                  // eslint-disable-next-line no-console
-                  console.clear();
-                  wholebody = $('body').detach();
-                  if ($('head')) {
-                      wholehead = $('head').detach();
-                  }
-                  if ($('#body-detached-css').length == 0) {
-                      $('html').append(
-                          $('<style id="body-detached-css">' +
-                          '.disabler-toaster.toaster-container {' +
-                          'position: fixed;' +
-                          'width: 100%;' +
-                          'top: 1vw;' +
-                          'z-index: 140002;' +
-                          'left: 0;' +
-                          'opacity: 0;' +
-                          'text-align: center;' +
-                          'transition: top 0.3s linear, opacity 0.3s linear;' +
-                          'display: none;' +
-                          '}' +
-                          '.disabler-toaster.toaster-container.fade {' +
-                          'top: 6vw;' +
-                          'opacity: 1;' +
-                          '}' +
-                          '.disabler-toaster.toaster-container.show {' +
-                          'display: block;' +
-                          '}' +
-                          '.disabler-toaster.toaster-container .toaster-message {' +
-                          'padding: 1rem 2rem;' +
-                          'color: white;' +
-                          'border-radius: 2px;' +
-                          'background-color: #424242;' +
-                          '}' +
-                          '</style>')
-                      );
-                  }
-                  showToaster(strings.developertoolsopened, 5000);
-              }
-              if (isOpen == false) {
-                  $('html').append(wholebody);
-                  wholebody = null;
-                  if (wholehead !== null) {
-                      $('html').append(wholehead);
-                  }
-              }
-          }
-
-          /**
-           * Check whether developer tools are opened or not
-           * @param {Object} root     root element object
-           */
-          function checkDevTools(root) {
-              var map = {};
-              // Check key down.
-              root.on('keydown', function(event) {
-                  if (macKeys[event.keyCode]) {
-                    map[macKeys[event.keyCode]] = event.type == 'keydown';
-                  }
-                  if (event.keyCode == 123 ||
-                      (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
-                      (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1) ||
-                      ((map['commandLeft'] || map['commandRight']) && map['option'] &&
-                      (map['I'] || map['C'] || map['U'] || map['J'] || map['K'] || map['S'] || map['E']))) {
-                      showToaster(strings.developertools);
-                      event.preventDefault();
-                      map[macKeys[event.keyCode]] = false;
-                      return;
-                  }
-              });
-
-              root.on('keyup', function(event) {
-                if (event.type == 'keyup') {
-                  if (macKeys[event.keyCode]) {
-                    map = {};
-                  }
+            // Promisses
+            var PROMISSES = {
+                SETTINGS: function(contextid) {
+                    return Ajax.call([{
+                        methodname: "local_disablerightclick_settings",
+                        args: {
+                            contextid: contextid
+                        }
+                    }])[0];
+                },
+                SUPPORT: function(action) {
+                    return Ajax.call([{
+                        methodname: "local_disablerightclick_support",
+                        args: {
+                            action: action
+                        }
+                    }])[0];
                 }
-              });
+            };
+        
+            var macKeys = {
+                91: 'commandLeft',
+                93: 'commandRight',
+                18: 'option',
+                73: 'I',
+                67: 'C',
+                85: 'U',
+                74: 'J',
+                75: 'K',
+                83: 'S',
+                69: 'E',
+                88: 'X',
+                86: 'V',
+            }
 
-              // Start interval to check developer tools is open or close.
-              setInterval(function() {
-                  var widthThreshold = window.outerWidth - window.innerWidth > threshold;
-                  var heightThreshold = window.outerHeight - window.innerHeight > threshold;
-                  var orientation = widthThreshold ? 'vertical' : 'horizontal';
+            /**
+             * Show toaster with message
+             *
+             * @param {String}  msg      Toaster message
+             * @param {Integer} duration Duration of toaster
+             */
+            function showToaster(msg, duration) {
+                if (duration == undefined) {
+                    duration = 2000;
+                }
+                var toast = $("<div class='disabler-toaster toaster-container' style='pointer-events:none;'>" +
+                "<lable class='toaster-message'>" + msg + "</lable>" +
+                "</div>");
+                $('html').append(toast);
+                $(toast).addClass('show');
+                setTimeout(function() {
+                    $(toast).addClass('fade');
+                    setTimeout(function() {
+                        $(toast).removeClass('fade');
+                        setTimeout(function() {
+                            $(toast).remove();
+                        }, 300);
+                    }, duration);
+                });
+            }
 
-                  if (
-                      !(heightThreshold && widthThreshold) &&
-                      ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-                          widthThreshold ||
-                          heightThreshold)
-                  ) {
-                      if (!devtools.isOpen || devtools.orientation !== orientation) {
-                          devToolsToggled(true);
-                      }
-
-                      devtools.isOpen = true;
-                      devtools.orientation = orientation;
-                  } else {
-                      if (devtools.isOpen) {
-                          devToolsToggled(false);
-                      }
-
-                      devtools.isOpen = false;
-                      devtools.orientation = undefined;
-                  }
-              }, 1000);
-          }
-
-          /**
-           * Check if current page has url from allowed list
-           *
-           * @param  {String} currentUrl Current page url
-           * @param  {String} allowed    Allowed url list
-           * @return {Bool}              True if allowed on current page
-           */
-          function currentPage(currentUrl, allowed) {
-              var matched = false;
-              allowed = allowed.trim().split('\n');
-              allowed.forEach(function(url) {
-                  if (matched) {
-                      return;
-                  }
-                  if (currentUrl.indexOf(url.trim()) != -1) {
-                      matched = true;
-                  }
-              });
-              return matched;
-          }
-
-          /**
-           * Disable functionality based on admin settings
-           *
-           * @param {Object} root     root element object
-           * @param {Object} settings Settings object
-           */
-          function disabler(root, settings) {
-
-              // Skip if no need to disable.
-              if (settings.length == 0) {
-                  return;
-              }
-
-              // Current page url.
-              var url = window.location.href;
-
-              // Skip disabling if all allowed in current page.
-              if (settings.allowall != '' && currentPage(url, settings.allowall)) {
-                  return;
-              }
-
-              // Disable right click.
-              if (settings.disablerightclick && settings.disablerightclick == true) {
-                  // Skip disabling if allowed in current page.
-                  if (settings.allowrightclick != '' && currentPage(url, settings.allowrightclick)) {
-                      return;
-                  }
-                  root.contextmenu(function(event) {
-                      showToaster(strings.rightclick);
-                      event.preventDefault();
-                      return;
-                  });
-              }
-
-              // Disable cut copy paste.
-              if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
-                  // Skip disabling if allowed in current page.
-                  if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
-                      return;
-                  }
-                  var map = {};
-                  root.on('keydown', function(event) {
-                      if (macKeys[event.keyCode]) {
-                        map[macKeys[event.keyCode]] = event.type == 'keydown';
-                      }
-                      if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1 ||
-                          ((map['commandLeft'] || map['commandRight']) && (map['C'] || map['X'] || map['V']))) {
-                          showToaster(strings.cutcopypaste);
-                          event.preventDefault();
-                          map[macKeys[event.keyCode]] = false;
-                          return;
-                      }
-                  });
-                  
-                  root.on('keyup', function(event) {
-                    if (event.type == 'keyup') {
-                      if (macKeys[event.keyCode]) {
-                        map = {};
-                      }
+            /**
+             * Start interval when developer tools is opened else clear inerval
+             *
+             * @param  {Boolean} isOpen true if tools is open
+             */
+            function devToolsToggled(isOpen) {
+                if (isOpen == true) {
+                    // eslint-disable-next-line no-console
+                    console.clear();
+                    wholebody = $('body').detach();
+                    if ($('head')) {
+                        wholehead = $('head').detach();
                     }
-                  });
-              }
+                    if ($('#body-detached-css').length == 0) {
+                        $('html').append(
+                            $('<style id="body-detached-css">' +
+                            '.disabler-toaster.toaster-container {' +
+                            'position: fixed;' +
+                            'width: 100%;' +
+                            'top: 1vw;' +
+                            'z-index: 140002;' +
+                            'left: 0;' +
+                            'opacity: 0;' +
+                            'text-align: center;' +
+                            'transition: top 0.3s linear, opacity 0.3s linear;' +
+                            'display: none;' +
+                            '}' +
+                            '.disabler-toaster.toaster-container.fade {' +
+                            'top: 6vw;' +
+                            'opacity: 1;' +
+                            '}' +
+                            '.disabler-toaster.toaster-container.show {' +
+                            'display: block;' +
+                            '}' +
+                            '.disabler-toaster.toaster-container .toaster-message {' +
+                            'padding: 1rem 2rem;' +
+                            'color: white;' +
+                            'border-radius: 2px;' +
+                            'background-color: #424242;' +
+                            '}' +
+                            '</style>')
+                        );
+                    }
+                    showToaster(strings.developertoolsopened, 5000);
+                }
+                if (isOpen == false) {
+                    $('html').append(wholebody);
+                    wholebody = null;
+                    if (wholehead !== null) {
+                        $('html').append(wholehead);
+                    }
+                }
+            }
 
-              // Disable developer tools.
-              if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
-                  // Skip disabling if allowed in current page.
-                  if (settings.allowdevelopertools != '' && currentPage(url, settings.allowdevelopertools)) {
-                      return;
+            /**
+             * Check whether developer tools are opened or not
+             * @param {Object} root     root element object
+             */
+            function checkDevTools(root) {
+                var map = {};
+                // Check key down.
+                root.on('keydown', function(event) {
+                    if (macKeys[event.keyCode]) {
+                      map[macKeys[event.keyCode]] = event.type == 'keydown';
+                    }
+                    if (event.keyCode == 123 ||
+                        (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
+                        (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1) ||
+                        ((map['commandLeft'] || map['commandRight']) && map['option'] &&
+                        (map['I'] || map['C'] || map['U'] || map['J'] || map['K'] || map['S'] || map['E']))) {
+                        showToaster(strings.developertools);
+                        event.preventDefault();
+                        map[macKeys[event.keyCode]] = false;
+                        return;
+                    }
+                });
+
+                root.on('keyup', function(event) {
+                  if (event.type == 'keyup') {
+                    if (macKeys[event.keyCode]) {
+                      map = {};
+                    }
                   }
-                  checkDevTools(root);
-              }
-          }
+                });
 
-          /**
-           * Check whether to show support modal or not. If yes then show.
-           * @param  {Boolean} showsupport True to show support modal
-           */
-          function support(showsupport) {
-              if (showsupport != true) {
-                  return;
-              }
-              ModalFactory.create({
-                  type: ModalFactory.types.DEFAULT,
-                  title: strings['supporttitle'],
-                  body: Templates.render('local_disablerightclick/support_modal', {})
-              }, $('#create-modal'))
-              .done(function(modal) {
-                  modal.getRoot();
-                  modal.show();
-                  $('body').on('click', '[data-action-disablerightclick]', function() {
-                      PROMISSES.SUPPORT($(this).data('value'));
-                      modal.destroy();
-                  });
-              })
-              .fail(Notification.exception);
-          }
+                // Start interval to check developer tools is open or close.
+                setInterval(function() {
+                    var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                    var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                    var orientation = widthThreshold ? 'vertical' : 'horizontal';
 
-          $(document).ready(function() {
-              var contextid = 0;
-              if (M.cfg.contextid != undefined) {
-                  contextid = M.cfg.contextid;
-              }
-              PROMISSES.SETTINGS(contextid).done(function(response) {
-                  var data = JSON.parse(response);
-                  strings = data.strings;
-                  disabler($('body'), data.settings);
-                  support(data.showsupport, data.context);
-                  setInterval(function() {
-                      if ($('iframe').length == 0) {
-                          return;
+                    if (
+                        !(heightThreshold && widthThreshold) &&
+                        ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
+                            widthThreshold ||
+                            heightThreshold)
+                    ) {
+                        if (!devtools.isOpen || devtools.orientation !== orientation) {
+                            devToolsToggled(true);
+                        }
+
+                        devtools.isOpen = true;
+                        devtools.orientation = orientation;
+                    } else {
+                        if (devtools.isOpen) {
+                            devToolsToggled(false);
+                        }
+
+                        devtools.isOpen = false;
+                        devtools.orientation = undefined;
+                    }
+                }, 1000);
+            }
+
+            /**
+             * Check if current page has url from allowed list
+             *
+             * @param  {String} currentUrl Current page url
+             * @param  {String} allowed    Allowed url list
+             * @return {Bool}              True if allowed on current page
+             */
+            function currentPage(currentUrl, allowed) {
+                var matched = false;
+                allowed = allowed.trim().split('\n');
+                allowed.forEach(function(url) {
+                    if (matched) {
+                        return;
+                    }
+                    if (currentUrl.indexOf(url.trim()) != -1) {
+                        matched = true;
+                    }
+                });
+                return matched;
+            }
+
+            /**
+             * Disable functionality based on admin settings
+             *
+             * @param {Object} root     root element object
+             * @param {Object} settings Settings object
+             */
+            function disabler(root, settings) {
+
+                // Skip if no need to disable.
+                if (settings.length == 0) {
+                    return;
+                }
+
+                // Current page url.
+                var url = window.location.href;
+
+                // Skip disabling if all allowed in current page.
+                if (settings.allowall != '' && currentPage(url, settings.allowall)) {
+                    return;
+                }
+
+                // Disable right click.
+                if (settings.disablerightclick && settings.disablerightclick == true) {
+                    // Skip disabling if allowed in current page.
+                    if (settings.allowrightclick != '' && currentPage(url, settings.allowrightclick)) {
+                        return;
+                    }
+                    root.contextmenu(function(event) {
+                        showToaster(strings.rightclick);
+                        event.preventDefault();
+                        return;
+                    });
+                }
+
+                // Disable cut copy paste.
+                if (settings.disablecutcopypaste && settings.disablecutcopypaste == true) {
+                    // Skip disabling if allowed in current page.
+                    if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
+                        return;
+                    }
+                    var map = {};
+                    root.on('keydown', function(event) {
+                        if (macKeys[event.keyCode]) {
+                          map[macKeys[event.keyCode]] = event.type == 'keydown';
+                        }
+                        if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1 ||
+                            ((map['commandLeft'] || map['commandRight']) && (map['C'] || map['X'] || map['V']))) {
+                            showToaster(strings.cutcopypaste);
+                            event.preventDefault();
+                            map[macKeys[event.keyCode]] = false;
+                            return;
+                        }
+                    });
+                    
+                    root.on('keyup', function(event) {
+                      if (event.type == 'keyup') {
+                        if (macKeys[event.keyCode]) {
+                          map = {};
+                        }
                       }
-                      $('iframe:not(.applied-disablement)').each(function(index, iframe) {
-                          $(this).addClass('applied-disablement');
-                          disabler($(iframe.contentWindow.document.body), data.settings);
-                      });
-                  }, 1000);
-              }).fail(Notification.exception);
-          });
-      }
-  };
+                    });
+                }
+
+                // Disable developer tools.
+                if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
+                    // Skip disabling if allowed in current page.
+                    if (settings.allowdevelopertools != '' && currentPage(url, settings.allowdevelopertools)) {
+                        return;
+                    }
+                    checkDevTools(root);
+                }
+            }
+
+            /**
+             * Check whether to show support modal or not. If yes then show.
+             * @param  {Boolean} showsupport True to show support modal
+             */
+            function support(showsupport) {
+                if (showsupport != true) {
+                    return;
+                }
+                ModalFactory.create({
+                    type: ModalFactory.types.DEFAULT,
+                    title: strings['supporttitle'],
+                    body: Templates.render('local_disablerightclick/support_modal', {})
+                }, $('#create-modal'))
+                .done(function(modal) {
+                    modal.getRoot();
+                    modal.show();
+                    $('body').on('click', '[data-action-disablerightclick]', function() {
+                        PROMISSES.SUPPORT($(this).data('value'));
+                        modal.destroy();
+                    });
+                })
+                .fail(Notification.exception);
+            }
+
+            $(document).ready(function() {
+                var contextid = 0;
+                if (M.cfg.contextid != undefined) {
+                    contextid = M.cfg.contextid;
+                }
+                PROMISSES.SETTINGS(contextid).done(function(response) {
+                    var data = JSON.parse(response);
+                    strings = data.strings;
+                    disabler($('body'), data.settings);
+                    support(data.showsupport, data.context);
+                    setInterval(function() {
+                        if ($('iframe').length == 0) {
+                            return;
+                        }
+                        $('iframe:not(.applied-disablement)').each(function(index, iframe) {
+                            $(this).addClass('applied-disablement');
+                            disabler($(iframe.contentWindow.document.body), data.settings);
+                        });
+                    }, 1000);
+                }).fail(Notification.exception);
+            });
+        }
+    };
 });
