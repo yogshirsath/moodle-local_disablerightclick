@@ -30,14 +30,14 @@ define([
     'core/modal_factory',
     'core/modal_events',
     'core/templates',
-  ], function(
+], function(
     $,
     Ajax,
     Notification,
     ModalFactory,
     ModalEvents,
     Templates
-  ) {
+) {
     return {
         init: function() {
             var devtools = {
