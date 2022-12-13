@@ -24,9 +24,10 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
 $functions = [
     'local_disablerightclick_settings' => [
-        'classname' => 'local_disablerightclick\external\api',
+        'classname' => \local_disablerightclick\external\api::class,
         'methodname' => 'settings',
         'classpath' => '',
         'description' => 'Get settings',
@@ -35,12 +36,12 @@ $functions = [
         'ajax' => true,
     ],
     'local_disablerightclick_support' => [
-        'classname' => 'local_disablerightclick\external\api',
+        'classname' => \local_disablerightclick\external\api::class,
         'methodname' => 'support',
         'classpath' => '',
         'description' => 'Show support modal',
         'type' => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ]
+    ],
 ];

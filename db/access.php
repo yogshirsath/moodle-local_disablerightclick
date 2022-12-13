@@ -23,12 +23,12 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'local/disablerightclick:allow' => array(
+$capabilities = [
+    'local/disablerightclick:allow' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW
-        ),
-    ),
-);
+        ],
+    ],
+];
