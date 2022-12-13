@@ -1,6 +1,10 @@
 ## Changes log
 
 
+### V1.3.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
+
+- Disable mouse selection.
+
 ### V1.2.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
 
 - Added support to iframe. Now you can disable right click and more on iframe.

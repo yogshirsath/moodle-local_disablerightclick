@@ -23,6 +23,7 @@ or other actions that can violate the site's content.
 - Disable Right Click.
 - Disable Cut, Copy and Paste.
 - Disable Developer Tools.
+- Disable mouse selection.
 
 ### Installation
 
