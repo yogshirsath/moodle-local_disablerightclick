@@ -1,4 +1,21 @@
-## V1.0.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8):
+## Changes log
+
+
+### V1.2.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
+
+- Added support to iframe. Now you can disable right click and more on iframe.
+- Fixed js error when course or category is deleted.
+- Fixed switch user role issue. Disabling will work properly when user role is switched.
+- Added modal to gain support.
+
+### V1.1.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
+
+- Fixed js issue when cache is disabled.
+- Added page url list setting to allow functionality on specific pages
+- Using checking capability to check admin and manager role.
+- Using capability to allow or disallow.
+
+### V1.0.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8):
 
 - Protect your content from selection and copy.
   this plugin makes content protection your extremely simple without yelling at your readers.
@@ -11,18 +28,6 @@
 - Compatible with Chrome and Firefox. (Soon will be compatible with Safari)
 - Easy to install and use.
 - Configure as your requirement. Following settings are available:
--- Disable Right Click
--- Disable Cut, Copy and Paste
--- Disable Developer Tools
-
-## V1.1.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
-- Fixed js issue when cache is disabled.
-- Added page url list setting to allow functionality on specific pages
-- Using checking capability to check admin and manager role.
-- Using capability to allow or disallow.
-
-## V1.2.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
-- Added support to iframe. Now you can disable right click and more on iframe.
-- Fixed js error when course or category is deleted.
-- Fixed switch user role issue. Disabling will work properly when user role is switched.
-- Added modal to gain support.
+- Disable Right Click
+- Disable Cut, Copy and Paste
+- Disable Developer Tools
