@@ -3,7 +3,9 @@
 
 ### V1.3.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
 
-- Disable mouse selection.
+- Add disable mouse selection option.
+- Reformat plugins documentation.
+- Improve coding style to meet exactly the Moodle standards.
 
 ### V1.2.0 (Moodle 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9):
 
