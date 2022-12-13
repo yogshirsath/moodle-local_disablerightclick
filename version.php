@@ -27,6 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_disablerightclick';
 $plugin->release = '1.2.0';
-$plugin->version  = 2020081500;
+$plugin->version  = 2020081501;
 $plugin->requires = 2017051500;
 $plugin->maturity = MATURITY_STABLE;

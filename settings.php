@@ -80,6 +80,26 @@ if ($hassiteconfig) {
         )
     );
 
+    // Disable mouse selection.
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'local_disablerightclick/disableselection',
+            get_string('disableselection', 'local_disablerightclick'),
+            get_string('disableselectiondesc', 'local_disablerightclick'),
+            true
+        )
+    );
+
+    // Allow cut, copy and paste on following pages.
+    $settings->add(
+        new admin_setting_configtextarea(
+            'local_disablerightclick/allowselection',
+            get_string('allowselection', 'local_disablerightclick'),
+            get_string('allowselectiondesc', 'local_disablerightclick'),
+            ''
+        )
+    );
+
     // Disable Developer Tools.
     $settings->add(
         new admin_setting_configcheckbox(

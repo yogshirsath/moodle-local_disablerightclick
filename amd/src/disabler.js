@@ -273,6 +273,15 @@ define([
                     });
                 }
 
+                if (settings.disableselection && settings.disableselection == true) {
+                    // Skip disabling if allowed in current page.
+                    if (settings.allowselection != '' && currentPage(url, settings.allowselection)) {
+                        return;
+                    }
+
+                    $('body').addClass('prevent-select');
+                }
+
                 // Disable developer tools.
                 if (settings.disabledevelopertools && settings.disabledevelopertools == true) {
                     // Skip disabling if allowed in current page.
