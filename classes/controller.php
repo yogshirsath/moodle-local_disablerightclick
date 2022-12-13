@@ -43,7 +43,7 @@ class controller {
      *
      * @return boolean True if user is site admin/manager
      */
-    public function is_allowed(int $contextid = 0) {
+    public function is_allowed(int $contextid = 0): bool {
         global $USER, $DB, $COURSE;
 
         if ($contextid === 0 || !$DB->record_exists('context', ['id' => $contextid])) {

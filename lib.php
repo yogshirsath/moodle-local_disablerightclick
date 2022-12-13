@@ -25,7 +25,9 @@
  **/
 
 function local_disablerightclick_before_footer() {
-    // TODO add changes here.
+    global $PAGE;
+
+    $PAGE->requires->js_call_amd('local_disablerightclick/disabler', 'init');
 }
 
 

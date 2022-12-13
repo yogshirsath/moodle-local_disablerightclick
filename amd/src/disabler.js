@@ -30,7 +30,7 @@ define([
     'core/modal_factory',
     'core/modal_events',
     'core/templates',
-], function(
+], function (
     $,
     Ajax,
     Notification,
@@ -57,9 +57,9 @@ define([
             // Store whole head.
             var wholehead = null;
 
-            // Promisses
+            // Promises.
             var PROMISSES = {
-                SETTINGS: function(contextid) {
+                SETTINGS: function (contextid) {
                     return Ajax.call([{
                         methodname: "local_disablerightclick_settings",
                         args: {
@@ -67,7 +67,7 @@ define([
                         }
                     }])[0];
                 },
-                SUPPORT: function(action) {
+                SUPPORT: function (action) {
                     return Ajax.call([{
                         methodname: "local_disablerightclick_support",
                         args: {
@@ -88,15 +88,15 @@ define([
                     duration = 2000;
                 }
                 var toast = $("<div class='disabler-toaster toaster-container'>" +
-                "<lable class='toaster-message'>" + msg + "</lable>" +
-                "</div>");
+                    "<lable class='toaster-message'>" + msg + "</lable>" +
+                    "</div>");
                 $('html').append(toast);
                 $(toast).addClass('show');
-                setTimeout(function() {
+                setTimeout(function () {
                     $(toast).addClass('fade');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(toast).removeClass('fade');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $(toast).remove();
                         }, 300);
                     }, duration);
@@ -119,31 +119,31 @@ define([
                     if ($('#body-detached-css').length == 0) {
                         $('html').append(
                             $('<style id="body-detached-css">' +
-                            '.disabler-toaster.toaster-container {' +
-                            'position: fixed;' +
-                            'width: 100%;' +
-                            'top: 1vw;' +
-                            'z-index: 140002;' +
-                            'left: 0;' +
-                            'opacity: 0;' +
-                            'text-align: center;' +
-                            'transition: top 0.3s linear, opacity 0.3s linear;' +
-                            'display: none;' +
-                            '}' +
-                            '.disabler-toaster.toaster-container.fade {' +
-                            'top: 6vw;' +
-                            'opacity: 1;' +
-                            '}' +
-                            '.disabler-toaster.toaster-container.show {' +
-                            'display: block;' +
-                            '}' +
-                            '.disabler-toaster.toaster-container .toaster-message {' +
-                            'padding: 1rem 2rem;' +
-                            'color: white;' +
-                            'border-radius: 2px;' +
-                            'background-color: #424242;' +
-                            '}' +
-                            '</style>')
+                                '.disabler-toaster.toaster-container {' +
+                                'position: fixed;' +
+                                'width: 100%;' +
+                                'top: 1vw;' +
+                                'z-index: 140002;' +
+                                'left: 0;' +
+                                'opacity: 0;' +
+                                'text-align: center;' +
+                                'transition: top 0.3s linear, opacity 0.3s linear;' +
+                                'display: none;' +
+                                '}' +
+                                '.disabler-toaster.toaster-container.fade {' +
+                                'top: 6vw;' +
+                                'opacity: 1;' +
+                                '}' +
+                                '.disabler-toaster.toaster-container.show {' +
+                                'display: block;' +
+                                '}' +
+                                '.disabler-toaster.toaster-container .toaster-message {' +
+                                'padding: 1rem 2rem;' +
+                                'color: white;' +
+                                'border-radius: 2px;' +
+                                'background-color: #424242;' +
+                                '}' +
+                                '</style>')
                         );
                     }
                     showToaster(strings.developertoolsopened, 5000);
@@ -164,7 +164,7 @@ define([
             function checkDevTools(root) {
 
                 // Check key down.
-                root.on('keydown', function(event) {
+                root.on('keydown', function (event) {
                     if (event.keyCode == 123 ||
                         (event.ctrlKey == true && event.shiftKey == true && [67, 73, 74].indexOf(event.keyCode) != -1) ||
                         (event.ctrlKey == true && [85].indexOf(event.keyCode) != -1)) {
@@ -175,7 +175,7 @@ define([
                 });
 
                 // Start interval to check developer tools is open or close.
-                setInterval(function() {
+                setInterval(function () {
                     var widthThreshold = window.outerWidth - window.innerWidth > threshold;
                     var heightThreshold = window.outerHeight - window.innerHeight > threshold;
                     var orientation = widthThreshold ? 'vertical' : 'horizontal';
@@ -208,12 +208,12 @@ define([
              *
              * @param  {String} currentUrl Current page url
              * @param  {String} allowed    Allowed url list
-             * @return {Bool}              True if allowed on current page
+             * @return {Bool} True if allowed on current page
              */
             function currentPage(currentUrl, allowed) {
                 var matched = false;
                 allowed = allowed.trim().split('\n');
-                allowed.forEach(function(url) {
+                allowed.forEach(function (url) {
                     if (matched) {
                         return;
                     }
@@ -251,7 +251,7 @@ define([
                     if (settings.allowrightclick != '' && currentPage(url, settings.allowrightclick)) {
                         return;
                     }
-                    root.contextmenu(function(event) {
+                    root.contextmenu(function (event) {
                         showToaster(strings.rightclick);
                         event.preventDefault();
                         return;
@@ -264,7 +264,7 @@ define([
                     if (settings.allowcutcopypaste != '' && currentPage(url, settings.allowcutcopypaste)) {
                         return;
                     }
-                    root.on('keydown', function(event) {
+                    root.on('keydown', function (event) {
                         if (event.ctrlKey == true && [65, 67, 83, 86, 88].indexOf(event.keyCode) != -1) {
                             showToaster(strings.cutcopypaste);
                             event.preventDefault();
@@ -296,15 +296,15 @@ define([
                     title: strings['supporttitle'],
                     body: Templates.render('local_disablerightclick/support_modal', {})
                 }, $('#create-modal'))
-                .done(function(modal) {
-                    modal.getRoot();
-                    modal.show();
-                    $('body').on('click', '[data-action-disablerightclick]', function() {
-                        PROMISSES.SUPPORT($(this).data('value'));
-                        modal.destroy();
-                    });
-                })
-                .fail(Notification.exception);
+                    .done(function (modal) {
+                        modal.getRoot();
+                        modal.show();
+                        $('body').on('click', '[data-action-disablerightclick]', function () {
+                            PROMISSES.SUPPORT($(this).data('value'));
+                            modal.destroy();
+                        });
+                    })
+                    .fail(Notification.exception);
             }
 
             $(document).ready(function() {
@@ -312,13 +312,13 @@ define([
                 if (M.cfg.contextid != undefined) {
                     contextid = M.cfg.contextid;
                 }
-                PROMISSES.SETTINGS(contextid).done(function(response) {
+                PROMISSES.SETTINGS(contextid).done(function (response) {
                     var data = JSON.parse(response);
                     strings = data.strings;
                     disabler($('body'), data.settings);
                     support(data.showsupport, data.context);
-                    setInterval(function() {
-                        if ($('iframe').length == 0) {
+                    setInterval(function () {
+                        if ($('iframe').length === 0) {
                             return;
                         }
                         $('iframe:not(.applied-disablement)').each(function(index, iframe) {
